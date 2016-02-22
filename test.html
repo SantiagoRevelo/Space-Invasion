@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <meta charset="utf-8">        
+        <meta name="author" content="CHANGE-ME">
+        <meta name="description" content="CHANGE-ME">
+        
+        <!-- Mobile Stuff -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="msapplication-tap-highlight" content="no">
+        
+        <!-- Chrome on Android -->
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="application-name" content="CHANGE-ME">
+        <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon.png">
+        
+        <!-- Safari on iOS -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="CHANGE-ME">
+        <link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png">
+        
+        <!-- Windows 8 -->
+        <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon.png">
+        <meta name="msapplication-TileColor" content="#FFFFFF">
+        
+        
+        <meta name="theme-color" content="#000000">
+        
+        <link rel="shortcut icon" href="favicon.ico">
+        
+        <title>HTML5 - Space Invader</title>
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
+        <script src="js/phaser.min.js"></script>
+    </head>
+
+    <body>    
+        <!-- Insert your HTML here -->
+        <script>
+        window.onload = function() {
+            var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'game', {preload: preload, create: create});
+             
+            function preload() {
+                game.load.image('logo', 'images/space_invader.jpg');
+                game.load.spritesheet('alien1', 'images/alien1.png', 100, 100, 2);
+                game.load.spritesheet('alien2', 'images/alien2.png', 100, 100, 2);
+                game.load.spritesheet('alien3', 'images/alien3.png', 100, 100, 2);
+            }
+            
+            function create() {
+                
+                game.physics.startSystem(Phaser.Physics.ARCADE);
+
+                var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
+                logo.anchor.setTo(0.5, 0.5);
+                
+                var texto = "Hello World! \n usando Phaser";
+                var style = {font: "40px Arial", fill: "#ffffff", align: "center"};
+                
+                var textoEnPantalla = game.add.text(game.world.centerX, game.world.centerY, texto, style);
+                textoEnPantalla.anchor.set(0.5, 0.5);
+
+                var alien1 = game.add.sprite(110, 110, 'alien1');
+                alien1.anchor.set(0.5, 0.5);
+                alien1.animations.add('idle');
+                alien1.animations.play('idle', 1, true);
+                
+                var alien2 = game.add.sprite(110, 220, 'alien2');
+                alien2.anchor.set(0.5, 0.5);
+                alien2.animations.add('idle');
+                alien2.animations.play('idle', 1, true);
+                
+                var alien3 = game.add.sprite(110, 330, 'alien3');
+                alien3.anchor.set(0.5, 0.5);
+                alien3.animations.add('idle');
+                alien3.animations.play('idle', 1, true);
+
+                game.physics.enable(alien1);
+                alien1.body.gravity.set(0, 50);
+                alien1.body.collideWorldBounds = true;
+                alien1.body.bounce.set(1);
+            }
+            
+            
+        }
+        </script>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <!-- Scripts -->
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+            ga('create', 'UA-XXXXXXXX-X', 'auto');
+            ga('send', 'pageview');
+        </script>
+    </body>
+</html>
