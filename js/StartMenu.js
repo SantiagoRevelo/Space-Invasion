@@ -21,7 +21,7 @@ SpaceInvasion.StartMenu.prototype = {
     update: function () {
         timer += this.time.elapsed;
         if (timer >= 400) {
-            timer =0;
+            timer %= 400;
             startPrompt.visible = !startPrompt.visible;
         }
     },

@@ -12,6 +12,9 @@ SpaceInvasion.Preloader.prototype = {
 		this.titleText = this.add.image(this.world.centerX, this.world.centerY - 150, 'titleImage');
 		this.titleText.anchor.setTo(0.5, 0.5);
 		this.load.image('titleScreen', 'assets/images/titleBg.png');
+        
+        this.load.image('ship', 'assets/images/ship.png');
+        this.load.image('motherShip', 'assets/images/motherShip.png');
 	}, 
 
 	create: function () {

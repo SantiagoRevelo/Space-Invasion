@@ -7,7 +7,6 @@ SpaceInvasion.Boot.prototype = {
 		this.load.image('preloaderBar', 'Assets/images/loaderBar.png');
 		this.load.image('titleImage', 'Assets/images/titleImage.png');
 	},
-
 	create: function() {
 		this.input.maxPointers = 1;
 		this.stage.disableVisibilityChange = false;
