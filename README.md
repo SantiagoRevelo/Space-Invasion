@@ -1,10 +1,10 @@
 # SpaceInvasion
 Space Invader Clone in HTML5
 
-Developed with: 
+Herramientas:
+NodeJs
 Phaser -> http://phaser.io
 Yeoman + generator-phaser 
-
 
 Se necesita NodeJs instalado:
 - npm install -> para actualizar las referencias
