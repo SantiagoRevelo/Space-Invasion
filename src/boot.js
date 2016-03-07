@@ -27,7 +27,7 @@ Boot.prototype.init = function () {
 
 Boot.prototype.preload = function () {
     //  Here we load the assets required for our preloader (in this case a background and a loading bar)
-    this.load.image('preloader', 'assets/preloader.gif');
+    this.load.image('loadingAnim', '../assets/preloader.gif');
 };
 
 Boot.prototype.create = function () {

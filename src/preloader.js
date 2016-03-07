@@ -4,26 +4,35 @@ function Preloader() {
 }
 
 Preloader.prototype.preload = function () {
-  this.asset = this.add.sprite(this.game.width * 0.5 - 110, this.game.height * 0.5 -10, 'preloader');
+  this.asset = this.add.sprite(this.world.centerX, this.world.centerY, 'loadingAnim');
+  this.asset.anchor.setTo(0.5, 0.5)
   this.load.setPreloadSprite(this.asset);
-
   this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
+    
   this.loadResources();
 };
 
 Preloader.prototype.loadResources = function () {
     // load your resources here
-    this.load.image('fondo', '../assets/images/titleBg.png');
-    this.load.image('player', '../assets/images/ship.png');    
+    this.load.image('fondo',  '../assets/images/titleBg.png');
+    this.load.image('player', '../assets/images/ship.png');
+    this.load.spritesheet('alien1', '../assets/images/alien1.png', 100, 100, 2);
+    this.load.spritesheet('alien2', '../assets/images/alien2.png', 100, 100, 2);
+    this.load.spritesheet('alien3', '../assets/images/alien3.png', 100, 100, 2);
+    this.load.image('motherShip', '../assets/images/motherShip.png');
+    this.load.image('explosion', '../assets/images/explosion.png');
+    this.load.image('explosion', '../assets/images/bomb.png');
+    this.load.image('explosion', '../assets/images/bullet.png');
 };
 
 Preloader.prototype.create = function () {
-
+    //this.asset.cropEnabled = false;
 };
 
 Preloader.prototype.update = function () {
   if (!!this.ready) {
-    this.game.state.start('menu');
+      this.game.state.start('menu');
+      this.game.state.start('game');
   }
 };
 
