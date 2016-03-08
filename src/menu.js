@@ -15,6 +15,8 @@ Menu.prototype.create = function () {
     startPrompt = this.add.text(this.world.centerX, this.world.centerY + 120, "- Touch to Start -", menuFontStyle);
     startPrompt.anchor.setTo(0.5, 0.5);
     timer = 0;
+    
+    
 };
 
 Menu.prototype.update = function () {
