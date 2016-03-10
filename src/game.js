@@ -1,74 +1,76 @@
 function Game() {
     this.navePlayer;
+    this.PLAYER_SPEED = 10;
+    
     this.singleEnemy;
     this.enemyWidth = 50;
     this.enemyHeight = 50;
+    
     this.level = 0;
     this.levelDef = [
         //level1
         [
             [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
             [0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
-            [0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0],
+            [0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0]
         ],
         //level2
         [],
         //level3
         []
     ];
-    this.arrowL;
-    this.arrowR;
+    
+    
+    
+    this.myTimer;
+    this.steps;
 }
 
 Game.prototype.create = function () {
-    this.input.onDown.add(this.onInputDown, this);
-    
-    this.navePlayer = this.add.sprite(this.world.centerX, this.world.height - 20, 'player').anchor.setTo(0.5);
-     
-    this.arrowR = this.add.sprite(this.world.width - 50, this.world.height - 100, 'cursor');
-    this.arrowR.anchor.setTo(1,1);
-    this.arrowR.inputEnabled = true;
-    this.arrowR.input.useHandCursor = true;
-    this.arrowR.events.onInputDown.add(this.onRightArrow_Handle, this);
-     
-    
-    this.arrowL = this.add.sprite(50, this.world.height - 100, 'cursor');
-    this.arrowL.anchor.setTo(1,1);
-    this.arrowL.scale.x = -1;
-    this.arrowL.inputEnabled = true;
-    this.arrowL.input.useHandCursor = true;
-    this.arrowL.events.onInputDown.add(this.onLeftArrow_Handle, this);
-    
-    //this.arrowL.input.useHandCursor = true;
 
-    
+    this.navePlayer = this.add.sprite(this.world.centerX, this.world.height - 10, 'navePlayer');
+    this.navePlayer.anchor.setTo(0.5, 1);    
     this.level = 0;
-    this.buildLevel();
+    this.buildLevel();     
 };
 
-Game.prototype.onLeftArrow_Handle = function() {
-    this.navePlayer.x++;
-    console.log(this.navePlayer.x);
-};
-
-Game.prototype.onRightArrow_Handle = function() {
-    this.navePlayer.x--;
-};
-
-Game.prototype.buildLevel = function() {
+Game.prototype.update = function () {
+    this.myTimer += this.time.elapsed;
     
+    if (this.myTimer >= 1000) {
+        this.myTimer %= 1000;
+        this.alienGroup.x += 10; 
+    }
+    this.checkInput();
+   
+};
+
+Game.prototype.checkInput = function() {
+    if (this.input.activePointer.isDown)
+    {
+        var targetX = this.input.activePointer.position.x;
+        var direction =  targetX >= this.world.centerX ? 1 : -1;
+        this.navePlayer.x += this.PLAYER_SPEED * direction;
+        console.log("this.navePlayer.x: " + this.navePlayer.x);
+    }
+    
+}    
+
+Game.prototype.buildLevel = function() {    
     // La posicion del primer alien en X la calculamos así: centroaAntallaX - (totalAliens/2 * ancho) + (ancho * 0.5) 
     var startXpos = this.world.centerX - (this.levelDef[this.level][0].length/2 * this.enemyWidth) + (this.enemyWidth * 0.5);
+   
     // La posicion en Y de los aliens empieza a partir de 100 + el alto de cada alien + un espacio de 20 pixels
-    var startYpos = 100;
-            
+    var startYpos = 100;            
+    
     this.alienGroup = this.add.group();
     this.alienGroup.enableBody = true;
+    
     for (var i = 0; i < this.levelDef[this.level].length; i++) { // filas
         for (var j = 0; j < this.levelDef[this.level][i].length; j++) { // columnas
             // El valor 0 es una posicion vacía
             if (this.levelDef[this.level][i][j] != 0) {
-                var alienName = "alien" + this.levelDef[this.level][i][j];
+                var alienName = "alien" + this.levelDef[this.   level][i][j];
 
                 var alien = this.alienGroup.create(startXpos + (j * this.enemyWidth), startYpos + (this.enemyHeight * i), alienName, 1);
                 alien.anchor.setTo(0.5, 0.5);
@@ -78,16 +80,9 @@ Game.prototype.buildLevel = function() {
                 alien.play('step1', 5);
                 console.log("Creado " + alienName  + "[" + i + "," + j + "]");
             }
-            //console.log("[i,j] = [" + i + "," + j + "]");
         }
     }
     console.log("Creado el escuadron de aliens del nivel: " + this.level + 1);
 }
-
-Game.prototype.update = function () {};
-
-Game.prototype.onInputDown = function () {
-  //this.game.state.start('menu');
-};
 
 module.exports = Game;

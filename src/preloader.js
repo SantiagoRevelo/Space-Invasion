@@ -15,7 +15,7 @@ Preloader.prototype.preload = function () {
 Preloader.prototype.loadResources = function () {
     // load your resources here
     this.load.image('fondo',  '../assets/images/titleBg.png');
-    this.load.image('player', '../assets/images/ship.png');
+    this.load.image('navePlayer', '../assets/images/ship.png');
     this.load.spritesheet('alien1', '../assets/images/alien1.png', 40, 40, 2);
     this.load.spritesheet('alien2', '../assets/images/alien2.png', 40, 40, 2);
     this.load.spritesheet('alien3', '../assets/images/alien3.png', 40, 40, 2);
@@ -32,7 +32,7 @@ Preloader.prototype.create = function () {
 
 Preloader.prototype.update = function () {
   if (!!this.ready) {
-      this.game.state.start('menu');
+      //this.game.state.start('menu');
       this.game.state.start('game');
   }
 };
