@@ -5,14 +5,19 @@ function Game() {
     this.singleEnemy;
     this.enemyWidth = 50;
     this.enemyHeight = 50;
+    this.enemyDir = 1;
+    this.alienSpeed = 10;
     
     this.level = 0;
     this.levelDef = [
         //level1
         [
-            [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
-            [0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
-            [0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0]
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+            [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+            [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+            [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
         ],
         //level2
         [],
@@ -20,29 +25,73 @@ function Game() {
         []
     ];
     
-    
-    
+    this.worldOffsetH;
+    this.worldOffsetV;
+    this.worldLimit;
     this.myTimer;
     this.steps;
 }
 
 Game.prototype.create = function () {
-
-    this.navePlayer = this.add.sprite(this.world.centerX, this.world.height - 10, 'navePlayer');
-    this.navePlayer.anchor.setTo(0.5, 1);    
+    
+    
     this.level = 0;
+    
+    this.worldOffsetH = 40;
+    this.worldOffsetV = 20;
+    this.worldLimit = this.world.width - this.worldOffsetH;
+    this.myTimer = 0;
+    this.steps = 1;
+    
+    
+    
     this.buildLevel();     
 };
 
 Game.prototype.update = function () {
     this.myTimer += this.time.elapsed;
     
-    if (this.myTimer >= 1000) {
-        this.myTimer %= 1000;
-        this.alienGroup.x += 10; 
+    if (this.myTimer >= 800) {
+        this.myTimer %= 800;
+        
+        var goDown = false;
+        var alienIncH = this.enemyDir * this.alienSpeed;
+        
+        
+        for (var i=0; i < this.alienGroup.length && !goDown; i++) {
+            if (this.alienGroup.children[i].x + alienIncH <= this.worldOffsetH) {
+                goDown = true;
+                console.log("godown");
+            }
+            if (this.alienGroup.children[i].x + alienIncH >= this.worldLimit ) {
+                goDown = true;
+                console.log("godown");
+            }
+        }
+                
+        if (!goDown) {
+            this.alienGroup.forEach(function(alien) {
+                alien.x += alienIncH; 
+            });            
+        }
+        else {
+            this.alienGroup.forEach(function(alien) {
+                alien.y += 30; 
+            });            
+            goDown != goDown;
+            this.enemyDir *= -1;
+        }
+        
+        
+        this.steps++;
+        if (this.steps % 2 == 0) 
+            this.alienGroup.callAll('animations.play', 'animations', 'step2');
+        else
+            this.alienGroup.callAll('animations.play', 'animations', 'step1');
+        
+
     }
     this.checkInput();
-   
 };
 
 Game.prototype.checkInput = function() {
@@ -50,13 +99,20 @@ Game.prototype.checkInput = function() {
     {
         var targetX = this.input.activePointer.position.x;
         var direction =  targetX >= this.world.centerX ? 1 : -1;
-        this.navePlayer.x += this.PLAYER_SPEED * direction;
+        var inc = this.PLAYER_SPEED * direction;
+        
+        if (this.navePlayer.x + inc >= this.worldOffsetH && this.navePlayer.x + inc  <= this.world.width - this.worldOffsetH) {
+            this.navePlayer.x += this.PLAYER_SPEED * direction;
+        }
         console.log("this.navePlayer.x: " + this.navePlayer.x);
-    }
-    
+    }    
 }    
 
-Game.prototype.buildLevel = function() {    
+Game.prototype.buildLevel = function() { 
+    // Creamos el player
+    this.navePlayer = this.add.sprite(this.world.centerX, this.world.height - this.worldOffsetV, 'navePlayer');
+    this.navePlayer.anchor.setTo(0.5, 1);    
+    
     // La posicion del primer alien en X la calculamos así: centroaAntallaX - (totalAliens/2 * ancho) + (ancho * 0.5) 
     var startXpos = this.world.centerX - (this.levelDef[this.level][0].length/2 * this.enemyWidth) + (this.enemyWidth * 0.5);
    
@@ -77,7 +133,7 @@ Game.prototype.buildLevel = function() {
                 alien.body.moves = false;
                 alien.animations.add('step1',[0], 1);
                 alien.animations.add('step2',[1], 1);
-                alien.play('step1', 5);
+                alien.play('step1', 1);
                 console.log("Creado " + alienName  + "[" + i + "," + j + "]");
             }
         }
