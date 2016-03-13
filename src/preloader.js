@@ -21,8 +21,8 @@ Preloader.prototype.loadResources = function () {
     this.load.spritesheet('alien3', '../assets/images/alien3.png', 40, 40, 2);
     this.load.image('motherShip', '../assets/images/motherShip.png');
     this.load.image('explosion', '../assets/images/explosion.png');
-    this.load.image('explosion', '../assets/images/bomb.png');
-    this.load.image('explosion', '../assets/images/bullet.png');
+    this.load.image('enemyBullet', '../assets/images/bomb.png');
+    this.load.image('playerBullet', '../assets/images/bullet.png');
     this.load.image('cursor', '../assets/images/arrow.png');
 };
 
