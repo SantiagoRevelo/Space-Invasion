@@ -34,6 +34,9 @@ function Game() {
     this.lives;
     this.livesCount;
     this.livesText;
+    this.playerScore;
+    this.scoreText;
+    this.scoreLabel;
     
     this.enemyWidth;
     this.enemyHeight;
@@ -71,6 +74,8 @@ Game.prototype.init = function() {
     this.playerCurrentSpeed = 0;
     this.playerAttackTime = 0;
     this.livesCount = 3;
+    this.playerScore = 0000;
+    this.scoreLabel = "Score: ";
         
     this.level = 1;
     this.myTimer = 0;
@@ -134,6 +139,10 @@ Game.prototype.buildLevel = function() {
     var textoCreditos = this.add.text(0, this.world.height - ((this.HUDHeight * 0.5) + 20), 'Space Invasion - By Sreveloc',  this.textBoldStyle);
     textoCreditos.x = this.world.width - this.worldOffsetH - textoCreditos.width;
     
+    // Puntuaciones
+    this.scoreText = this.add.text(0, this.worldOffsetV, this.scoreLabel  + this.fixedIntSize(0, 4),  this.textStyle);
+    this.scoreText.x = this.world.width - this.worldOffsetH - this.scoreText.width;
+    
     //Eenemies
     this.alienGroup = this.add.group();
     this.alienGroup.enableBody = true;    
@@ -144,7 +153,7 @@ Game.prototype.createEnemies = function() {
     // La posicion del primer alien en X la calculamos así: centroaAntallaX - (totalAliens/2 * ancho) + (ancho * 0.5) 
     var startXpos = this.world.centerX - (this.LEVELS_DEFINITION[this.level-1][0].length/2 * this.enemyWidth) + (this.enemyWidth * 0.5);
     // La posicion en Y de los aliens empieza a partir de 100 + el alto de cada alien + un espacio de 20 pixels
-    var startYpos = 100;
+    var startYpos = 150;
     
     for (var i = 0; i < this.LEVELS_DEFINITION[this.level-1].length; i++) { // filas
         for (var j = 0; j < this.LEVELS_DEFINITION[this.level-1][i].length; j++) { // columnas
@@ -329,7 +338,10 @@ Game.prototype.playerBulletHitsEnemy = function(bullet, enemy) {
     bullet.kill();
     enemy.kill();
     this.playerAttackTime = 0;
+    
     //TODO: addPoints, create explosions, etc...
+    this.playerScore += 10;
+    this.scoreText.text = this.scoreLabel + this.fixedIntSize(this.playerScore, 4);
 }
 
 Game.prototype.enemyBulletHitsPlayer = function(player, enemyBullet) {
@@ -342,6 +354,12 @@ Game.prototype.enemyBulletHitsPlayer = function(player, enemyBullet) {
 Game.prototype.alienHitsPlayer = function(navePlayer, enemy) {
     console.log("Game Over");
     this.isPlaying = !this.isPlaying;
+}
+
+
+Game.prototype.fixedIntSize = function(num, size) {
+    var s = "000000000" + num;
+    return s.substr(s.length-size);
 }
 
 module.exports = Game;
