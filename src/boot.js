@@ -6,16 +6,18 @@ Boot.prototype.init = function () {
 
     if (this.game.device.desktop)
     {
-        this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        this.game.scale.setMinMax(512, 288, 1280, 720);
+        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL ; 
+        this.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL ;
+        this.game.scale.setMinMax(640, 360, 1280, 720);
         
         this.game.scale.pageAlignHorizontally = true;
         this.game.scale.pageAlignVertically = true;
     }
     else
     {
-        this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        this.game.scale.setMinMax(512, 288, 1280, 720);
+        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL ; 
+        this.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL ;
+        this.game.scale.setMinMax(640, 360, 1280, 720);
         this.game.scale.pageAlignHorizontally = true;
         this.game.scale.pageAlignVertically = true;
         this.game.scale.forceOrientation(true, false);

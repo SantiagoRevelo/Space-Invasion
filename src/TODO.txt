@@ -1,6 +1,7 @@
 Mejoras pra cerrar versión 1.0:
 - Nave Bonus
-- Escudos
+- Escudos (mejorarlos)
+- Explosiones
 - Muerte del player
 - Cambio de nivel
 - Highscores online (firebase)

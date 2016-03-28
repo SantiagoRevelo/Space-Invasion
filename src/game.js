@@ -9,7 +9,12 @@ function Game() {
             [0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0]
         ],
         //level2
-        [],
+        [
+            [0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0],
+            [0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
+            [0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0],
+            [3, 0, 0, 3, 3, 3, 3, 3, 0, 0, 3],
+        ],
         //level3
         [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -44,9 +49,12 @@ function Game() {
     this.enemySpeed;
     this.enemyTimerUpdate;
     this.livingEnemies;
-
     this.enemyBullets;
     this.enemyAttackTimer;
+    
+    this.shields;
+    this.shieldBmps;
+    this.shieldsDamageBmp;
     
     this.level;
     this.myTimer;
@@ -77,7 +85,7 @@ Game.prototype.init = function() {
     this.playerScore = 0000;
     this.scoreLabel = "Score: ";
         
-    this.level = 1;
+    this.level = 2;
     this.myTimer = 0;
     this.steps = 1;
     
@@ -89,6 +97,10 @@ Game.prototype.init = function() {
     this.livingEnemies = [];
     this.enemyAttackTimer = this.rnd.integerInRange(0, 5) * 1000 / this.level;
     
+    this.shieldBmps = [];
+    this.shieldDamageBmp = this.make.bitmapData(12, 36);
+    this.shieldDamageBmp.fill(0,0,0,1); 
+        
     this.worldOffsetH = 40;
     this.worldOffsetV = 20;
     this.HUDHeight = 80;
@@ -100,6 +112,7 @@ Game.prototype.init = function() {
 }
 
 Game.prototype.buildLevel = function() { 
+    this.stage.backgroundColor = "#4488AA";
     this.physics.startSystem(Phaser.Physics.ARCADE);
     
     // Creamos el player
@@ -115,7 +128,7 @@ Game.prototype.buildLevel = function() {
     this.playerBullets.physicsBodyType = Phaser.Physics.ARCADE;
     this.playerBullets.createMultiple(2, 'playerBullet');
     this.playerBullets.setAll('anchor.x', 0.5);
-    this.playerBullets.setAll('anchor.y', 1);
+    this.playerBullets.setAll('anchor.y', 0);
     this.playerBullets.setAll('outOfBoundsKill', true);
     this.playerBullets.setAll('checkWorldBounds', true);
     
@@ -147,6 +160,27 @@ Game.prototype.buildLevel = function() {
     this.alienGroup = this.add.group();
     this.alienGroup.enableBody = true;    
     this.createEnemies();
+    
+    
+    //Escudos
+    this.shields = this.add.group();
+    this.shields.enableBody = true;    
+    for (var i = 0; i < 3; i++ ) {
+        var baseBmp = this.make.bitmapData(80,70);
+        baseBmp.draw('shield', 0, 0, 80, 70);
+        baseBmp.update();
+        
+        var shieldX = this.world.width * 0.25 * ( i + 1);
+        var shieldY = this.world.height * 0.7;
+        
+        var s = this.shields.create( shieldX, shieldY, baseBmp);
+        //s.anchor.setTo(0.5, 1);
+        this.shieldBmps.push({
+            bmp: baseBmp,
+            worldX: shieldX,
+            worldY: shieldY
+        });
+    }
 }
 
 Game.prototype.createEnemies = function() {
@@ -167,7 +201,7 @@ Game.prototype.createEnemies = function() {
                 alien.animations.add('step1',[0], 1);
                 alien.animations.add('step2',[1], 1);
                 alien.play('step1', 1);
-                console.log("Creado " + alienName  + "[" + i + "," + j + "]");
+               //console.log("Creado " + alienName  + "[" + i + ", " + j + "]");
             }
         }
     }
@@ -177,7 +211,7 @@ Game.prototype.createEnemies = function() {
     this.enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
     this.enemyBullets.createMultiple(1 * this.level, 'enemyBullet');
     this.enemyBullets.setAll('anchor.x', 0.5);
-    this.enemyBullets.setAll('anchor.y', 1);
+    this.enemyBullets.setAll('anchor.y', 0);
     this.enemyBullets.setAll('outOfBoundsKill', true);
     this.enemyBullets.setAll('checkWorldBounds', true);
     
@@ -279,6 +313,8 @@ Game.prototype.updateCollisions = function() {
     this.physics.arcade.overlap(this.playerBullets, this.alienGroup, this.playerBulletHitsEnemy, null, this);
     this.physics.arcade.overlap(this.enemyBullets, this.navePlayer, this.enemyBulletHitsPlayer, null, this);
     this.physics.arcade.overlap(this.navePlayer, this.alienGroup, this.alienHitsPlayer, null, this);
+    this.physics.arcade.overlap(this.playerBullets, this.shields, this.bulletHitsShield, null, this);
+    this.physics.arcade.overlap(this.enemyBullets, this.shields, this.bulletHitsShield, null, this);
 }
 
 Game.prototype.movePlayer = function() {
@@ -357,9 +393,39 @@ Game.prototype.alienHitsPlayer = function(navePlayer, enemy) {
 }
 
 
+Game.prototype.bulletHitsShield = function(bullet, shield) {
+    console.log("impacto en la defensa");
+    var shieldIdx = this.shields.getChildIndex(shield); 
+
+    var matchingBmp = this.shieldBmps[shieldIdx];
+    
+    var bmpRelativeX = Math.round(bullet.x - matchingBmp.worldX);
+    var bmpRelativeY = Math.round(bullet.y - matchingBmp.worldY);
+    var bmpPixelRgba = matchingBmp.bmp.getPixelRGB(bmpRelativeX, bmpRelativeY); 
+
+    if (bmpPixelRgba.a > 0 && bmpPixelRgba.g > 0 ) { // we hit a "white" pixel  
+        this.shieldDamageBmp.fill(bmpPixelRgba.r, bmpPixelRgba.g, bmpPixelRgba.b, 0);
+        matchingBmp.bmp.draw(this.shieldDamageBmp, bmpRelativeX - (this.shieldDamageBmp.width * 0.5 ), bmpRelativeY);
+        matchingBmp.bmp.update();
+        bullet.kill();
+        if (bullet.key === "playerBullet") {
+            this.playerAttackTime = 0;
+        }
+    } 
+
+}
+
 Game.prototype.fixedIntSize = function(num, size) {
     var s = "000000000" + num;
     return s.substr(s.length-size);
+}
+
+Game.prototype.render = function() {
+    //Phaser.Utils.Debug.bmd(this.shieldBmps[1]);
+    this.game.debug.spriteBounds(this.shields, '#ff0000', false);
+    this.game.debug.spriteBounds(this.navePlayer, '#ff0000', false);
+    this.game.debug.spriteBounds(this.playerBullets, '#ff0000', false);
+    
 }
 
 module.exports = Game;

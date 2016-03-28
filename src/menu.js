@@ -28,7 +28,10 @@ Menu.prototype.update = function () {
 };
 
 Menu.prototype.onInputDown = function () {
-  this.game.state.start('game');
+    if (!this.game.device.desktop) {
+        this.scale.startFullScreen ();
+    }
+    this.game.state.start('game');
 };
 
 module.exports = Menu;
