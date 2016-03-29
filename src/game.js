@@ -93,13 +93,14 @@ Game.prototype.init = function() {
     this.enemyHeight = 50;
     this.enemyDir = 1;
     this.enemySpeed = 25;
-    this.enemyTimerUpdate = 1000;
+    this.enemyTimerUpdate = 10;
     this.livingEnemies = [];
     this.enemyAttackTimer = this.rnd.integerInRange(0, 5) * 1000 / this.level;
     
     this.shieldBmps = [];
-    this.shieldDamageBmp = this.make.bitmapData(12, 36);
-    this.shieldDamageBmp.fill(0,0,0,1); 
+    this.shieldDamageBmp = this.make.bitmapData(28, 28);
+    this.shieldDamageBmp.circle(14,14,14, 'rgbs(0, 0, 0, 0)');    
+    this.shieldDamageBmp.update();
         
     this.worldOffsetH = 40;
     this.worldOffsetV = 20;
@@ -166,15 +167,16 @@ Game.prototype.buildLevel = function() {
     this.shields = this.add.group();
     this.shields.enableBody = true;    
     for (var i = 0; i < 3; i++ ) {
+        
         var baseBmp = this.make.bitmapData(80,70);
         baseBmp.draw('shield', 0, 0, 80, 70);
         baseBmp.update();
         
-        var shieldX = this.world.width * 0.25 * ( i + 1);
+        var shieldX = this.world.width * 0.25 * ( i + 1) - baseBmp.width * 0.5;
         var shieldY = this.world.height * 0.7;
         
-        var s = this.shields.create( shieldX, shieldY, baseBmp);
-        //s.anchor.setTo(0.5, 1);
+        this.shields.create( shieldX, shieldY, baseBmp);
+        
         this.shieldBmps.push({
             bmp: baseBmp,
             worldX: shieldX,
@@ -315,6 +317,7 @@ Game.prototype.updateCollisions = function() {
     this.physics.arcade.overlap(this.navePlayer, this.alienGroup, this.alienHitsPlayer, null, this);
     this.physics.arcade.overlap(this.playerBullets, this.shields, this.bulletHitsShield, null, this);
     this.physics.arcade.overlap(this.enemyBullets, this.shields, this.bulletHitsShield, null, this);
+    this.physics.arcade.overlap(this.alienGroup, this.shields, this.alienHitsShield, null, this);
 }
 
 Game.prototype.movePlayer = function() {
@@ -403,16 +406,21 @@ Game.prototype.bulletHitsShield = function(bullet, shield) {
     var bmpRelativeY = Math.round(bullet.y - matchingBmp.worldY);
     var bmpPixelRgba = matchingBmp.bmp.getPixelRGB(bmpRelativeX, bmpRelativeY); 
 
-    if (bmpPixelRgba.a > 0 && bmpPixelRgba.g > 0 ) { // we hit a "white" pixel  
-        this.shieldDamageBmp.fill(bmpPixelRgba.r, bmpPixelRgba.g, bmpPixelRgba.b, 0);
-        matchingBmp.bmp.draw(this.shieldDamageBmp, bmpRelativeX - (this.shieldDamageBmp.width * 0.5 ), bmpRelativeY);
+    if (bmpPixelRgba.a > 0 ) { // we hit a colored zone
+        matchingBmp.bmp.blendDestinationOut();
+        matchingBmp.bmp.draw(this.shieldDamageBmp, bmpRelativeX - (this.shieldDamageBmp.width * 0.5 ), bmpRelativeY- (this.shieldDamageBmp.height * 0.5 ));
+        matchingBmp.bmp.blendReset();
         matchingBmp.bmp.update();
+        
         bullet.kill();
         if (bullet.key === "playerBullet") {
             this.playerAttackTime = 0;
         }
-    } 
+    }
+}
 
+Game.prototype.alienHitsShield = function(bullet, shield) {
+    shield.kill();    
 }
 
 Game.prototype.fixedIntSize = function(num, size) {
