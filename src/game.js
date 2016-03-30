@@ -52,6 +52,11 @@ function Game() {
     this.enemyBullets;
     this.enemyAttackTimer;
     
+    this.motherShip;
+    this.motherShipSpeed;
+    this.motherShipwaitTimer;
+    this.motherShipwaitKilledInThisLevel;
+    
     this.shields;
     this.shieldBmps;
     this.shieldsDamageBmp;
@@ -162,6 +167,17 @@ Game.prototype.buildLevel = function() {
     this.alienGroup.enableBody = true;    
     this.createEnemies();
     
+    //Nave nodriza bonus
+    
+    this.motherShipSpeed = 200;
+    this.motherShipwaitTimer = this.time.now + 10000;
+    this.motherShipwaitKilledInThisLevel = false;
+    
+    this.motherShip = this.add.sprite(-100, 65, 'motherShip');
+    this.motherShip.scale.set(0.5);
+    this.motherShip.enableBody = true;
+    this.motherShip.physicsBodyType = Phaser.Physics.ARCADE;
+    this.physics.arcade.enable(this.motherShip);
     
     //Escudos
     this.shields = this.add.group();
@@ -228,6 +244,7 @@ Game.prototype.update = function () {
             this.updateEnemies();
         }
 
+        this.BonusMotherShipUpdate();
         this.checkInput();
 
         this.updateCollisions();
@@ -273,6 +290,14 @@ Game.prototype.updateEnemies = function() {
         }
 }
 
+Game.prototype.BonusMotherShipUpdate = function() {
+    if (!this.motherShipwaitKilledInThisLevel) {
+        if (this.time.now > this.motherShipwaitTimer) {
+            this.motherShip.body.velocity.x = this.motherShipSpeed;
+        }
+    }
+}
+
 Game.prototype.checkInput = function() {
     var isMoving = false;
     // Controles Táctiles
@@ -314,6 +339,7 @@ Game.prototype.checkInput = function() {
 Game.prototype.updateCollisions = function() {
     this.physics.arcade.overlap(this.playerBullets, this.alienGroup, this.playerBulletHitsEnemy, null, this);
     this.physics.arcade.overlap(this.enemyBullets, this.navePlayer, this.enemyBulletHitsPlayer, null, this);
+    this.physics.arcade.overlap(this.playerBullets, this.motherShip, this.playerBulletHitsMotherShip, null, this);
     this.physics.arcade.overlap(this.navePlayer, this.alienGroup, this.alienHitsPlayer, null, this);
     this.physics.arcade.overlap(this.playerBullets, this.shields, this.bulletHitsShield, null, this);
     this.physics.arcade.overlap(this.enemyBullets, this.shields, this.bulletHitsShield, null, this);
@@ -390,6 +416,12 @@ Game.prototype.enemyBulletHitsPlayer = function(player, enemyBullet) {
     //TODO: addPoints, create explosions, etc... 
 }
 
+Game.prototype.playerBulletHitsMotherShip = function(bullet, motherShip) {
+    bullet.kill();
+    motherShip.kill();
+    // TODO: Add FX, points, etc...
+}
+
 Game.prototype.alienHitsPlayer = function(navePlayer, enemy) {
     console.log("Game Over");
     this.isPlaying = !this.isPlaying;
@@ -416,11 +448,13 @@ Game.prototype.bulletHitsShield = function(bullet, shield) {
         if (bullet.key === "playerBullet") {
             this.playerAttackTime = 0;
         }
+        // TODO: Add FX
     }
 }
 
 Game.prototype.alienHitsShield = function(bullet, shield) {
-    shield.kill();    
+    shield.kill();
+    // TODO: Add FX
 }
 
 Game.prototype.fixedIntSize = function(num, size) {

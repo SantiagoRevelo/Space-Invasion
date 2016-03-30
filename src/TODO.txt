@@ -1,8 +1,8 @@
 Mejoras pra cerrar versión 1.0:
-- Nave Bonus
 - Explosiones
 - Muerte del player
 - Cambio de nivel
+- points
 - Highscores online (firebase)
 - Sonido
 
