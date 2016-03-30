@@ -4,4 +4,5 @@ Mejoras pra cerrar versión 1.0:
 - Muerte del player
 - Cambio de nivel
 - Highscores online (firebase)
+- Sonido
 

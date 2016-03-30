@@ -85,7 +85,7 @@ Game.prototype.init = function() {
     this.playerScore = 0000;
     this.scoreLabel = "Score: ";
         
-    this.level = 2;
+    this.level = 1 ;
     this.myTimer = 0;
     this.steps = 1;
     
@@ -93,13 +93,13 @@ Game.prototype.init = function() {
     this.enemyHeight = 50;
     this.enemyDir = 1;
     this.enemySpeed = 25;
-    this.enemyTimerUpdate = 10;
+    this.enemyTimerUpdate = 1000 ;
     this.livingEnemies = [];
     this.enemyAttackTimer = this.rnd.integerInRange(0, 5) * 1000 / this.level;
     
     this.shieldBmps = [];
     this.shieldDamageBmp = this.make.bitmapData(28, 28);
-    this.shieldDamageBmp.circle(14,14,14, 'rgbs(0, 0, 0, 0)');    
+    this.shieldDamageBmp.circle(14,14,14, 'rgba(0, 0, 0, 255)');    
     this.shieldDamageBmp.update();
         
     this.worldOffsetH = 40;
@@ -113,7 +113,7 @@ Game.prototype.init = function() {
 }
 
 Game.prototype.buildLevel = function() { 
-    this.stage.backgroundColor = "#4488AA";
+    // this.stage.backgroundColor = "#4488AA";
     this.physics.startSystem(Phaser.Physics.ARCADE);
     
     // Creamos el player
@@ -428,12 +428,11 @@ Game.prototype.fixedIntSize = function(num, size) {
     return s.substr(s.length-size);
 }
 
+/*
 Game.prototype.render = function() {
-    //Phaser.Utils.Debug.bmd(this.shieldBmps[1]);
     this.game.debug.spriteBounds(this.shields, '#ff0000', false);
     this.game.debug.spriteBounds(this.navePlayer, '#ff0000', false);
-    this.game.debug.spriteBounds(this.playerBullets, '#ff0000', false);
-    
+    this.game.debug.spriteBounds(this.playerBullets, '#ff0000', false);    
 }
-
+*/
 module.exports = Game;
