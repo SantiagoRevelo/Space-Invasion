@@ -25,6 +25,7 @@ Preloader.prototype.loadResources = function () {
     this.load.image('enemyBullet', '../assets/images/bomb.png');
     this.load.image('playerBullet', '../assets/images/bullet.png');
     this.load.image('cursor', '../assets/images/arrow.png');
+    this.load.image('pixel', '../assets/images/pixel.jpg');
 };
 
 Preloader.prototype.create = function () {

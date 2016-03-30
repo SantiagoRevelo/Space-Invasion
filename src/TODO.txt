@@ -1,8 +1,6 @@
 Mejoras pra cerrar versión 1.0:
-- Explosiones
-- Muerte del player
 - Cambio de nivel
-- points
+- Muerte del player
 - Highscores online (firebase)
 - Sonido
 

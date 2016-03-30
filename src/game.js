@@ -61,6 +61,8 @@ function Game() {
     this.shieldBmps;
     this.shieldsDamageBmp;
     
+    this.alienDeadEmitter;
+    
     this.level;
     this.myTimer;
     this.steps;
@@ -107,6 +109,12 @@ Game.prototype.init = function() {
     this.shieldDamageBmp.circle(14,14,14, 'rgba(0, 0, 0, 255)');    
     this.shieldDamageBmp.update();
         
+    this.alienDeadEmitter = this.add.emitter(0, 0, 100);
+    this.alienDeadEmitter.makeParticles('pixel', 0, 250, 1, true);
+    this.alienDeadEmitter.collide = true;
+    this.alienDeadEmitter.enableBody = true;
+    this.alienDeadEmitter.gravity = 200;
+    
     this.worldOffsetH = 40;
     this.worldOffsetV = 20;
     this.HUDHeight = 80;
@@ -400,6 +408,7 @@ Game.prototype.resetBullet = function(bulet) {
 */
 
 Game.prototype.playerBulletHitsEnemy = function(bullet, enemy) {
+    this.explodeParticles(enemy.x, enemy.y, 0xFFFFFF, 1500, 15);
     bullet.kill();
     enemy.kill();
     this.playerAttackTime = 0;
@@ -417,9 +426,13 @@ Game.prototype.enemyBulletHitsPlayer = function(player, enemyBullet) {
 }
 
 Game.prototype.playerBulletHitsMotherShip = function(bullet, motherShip) {
+    this.explodeParticles(motherShip.x, motherShip.y, 0xFF0000, 2500, 30);
+    
     bullet.kill();
     motherShip.kill();
     // TODO: Add FX, points, etc...
+    this.playerScore += 20;
+    this.scoreText.text = this.scoreLabel + this.fixedIntSize(this.playerScore, 4);
 }
 
 Game.prototype.alienHitsPlayer = function(navePlayer, enemy) {
@@ -444,6 +457,8 @@ Game.prototype.bulletHitsShield = function(bullet, shield) {
         matchingBmp.bmp.blendReset();
         matchingBmp.bmp.update();
         
+        this.explodeParticles(bullet.x, bullet.y, 0x00FF00, 1500, 15);
+        
         bullet.kill();
         if (bullet.key === "playerBullet") {
             this.playerAttackTime = 0;
@@ -456,6 +471,14 @@ Game.prototype.alienHitsShield = function(bullet, shield) {
     shield.kill();
     // TODO: Add FX
 }
+
+Game.prototype.explodeParticles = function(x, y, color, lifespan, number) {
+    this.alienDeadEmitter.x = x;
+    this.alienDeadEmitter.y = y;
+    this.alienDeadEmitter.forEach(function(particle){ if (!particle.visible) particle.tint = color;}); 
+    this.alienDeadEmitter.start(true, lifespan, null, number);
+}
+
 
 Game.prototype.fixedIntSize = function(num, size) {
     var s = "000000000" + num;
