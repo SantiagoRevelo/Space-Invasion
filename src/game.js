@@ -154,12 +154,13 @@ Game.prototype.buildLevel = function() {
     window.graphics = line;
     
     // Texto de numero de vidas
-    this.livesText = this.add.text(this.worldOffsetH, this.world.height - ((this.HUDHeight * 0.5) + 20), this.livesCount,  this.textStyle);    
+    this.livesText = this.add.text(this.worldOffsetH, this.world.height - ((this.HUDHeight * 0.5) + 20), 3,  this.textStyle);    
     this.lives = this.add.group();
     for (var i = 0; i < this.livesCount; i++ ) {
         var nave = this.lives.create(this.livesText.x + this.livesText.width + 10 + 60 * i, this.livesText.y + 7, 'navePlayer');
         nave.tint = 0x00FF00;
     }
+    this.livesText.text = this.lives.countLiving();
     
     var textoCreditos = this.add.text(0, this.world.height - ((this.HUDHeight * 0.5) + 20), 'Space Invasion - By Sreveloc',  this.textBoldStyle);
     textoCreditos.x = this.world.width - this.worldOffsetH - textoCreditos.width;
@@ -259,8 +260,7 @@ Game.prototype.createShields = function() {
 
 Game.prototype.startLevel = function() {
     // Seteamos el player
-    this.navePlayer.x = this.world.centerX;
-    this.navePlayer.y = this.world.height - this.worldOffsetV - this.HUDHeight;
+    this.setPlayerStartPosition();
     
     // Seteamos las balas del plaYer
     this.playerBullets.removeAll();
@@ -282,6 +282,11 @@ Game.prototype.startLevel = function() {
     //Seteamos las defensas
     this.shields.removeAll();
     this.createShields();
+}
+
+Game.prototype.setPlayerStartPosition = function() {
+    this.navePlayer.x = this.world.centerX;
+    this.navePlayer.y = this.world.height - this.worldOffsetV - this.HUDHeight;
 }
 
 Game.prototype.update = function () {
@@ -471,10 +476,21 @@ Game.prototype.playerBulletHitsEnemy = function(bullet, enemy) {
 }
 
 Game.prototype.enemyBulletHitsPlayer = function(player, enemyBullet) {
+    this.explodeParticles(enemyBullet.x, enemyBullet.y, 0xFFFFFF, 1500, 50);
     enemyBullet.kill();
     console.log("Alcanzado por una bala enemiga");
     this.enemyAttackTimer = 0;
+    
     //TODO: addPoints, create explosions, etc... 
+    this.lives.getFirstExists(false);
+    var live = this.lives.getFirstAlive();
+
+    if (live)
+    {
+        live.kill();
+    }
+    this.livesText.text = this.lives.countLiving();
+    this.setPlayerStartPosition()
 }
 
 Game.prototype.playerBulletHitsMotherShip = function(bullet, motherShip) {
