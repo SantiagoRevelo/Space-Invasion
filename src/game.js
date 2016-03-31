@@ -4,7 +4,7 @@ function Game() {
     this.LEVELS_DEFINITION = [
         //level1
         [
-            [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
             [0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0]
         ],
@@ -79,7 +79,9 @@ function Game() {
 
 Game.prototype.create = function () {
     this.init();    
-    this.buildLevel();     
+    this.buildLevel();
+    this.startLevel();
+    
 };
 
 Game.prototype.init = function() {
@@ -104,7 +106,6 @@ Game.prototype.init = function() {
     this.livingEnemies = [];
     this.enemyAttackTimer = this.rnd.integerInRange(0, 5) * 1000 / this.level;
     
-    this.shieldBmps = [];
     this.shieldDamageBmp = this.make.bitmapData(28, 28);
     this.shieldDamageBmp.circle(14,14,14, 'rgba(0, 0, 0, 255)');    
     this.shieldDamageBmp.update();
@@ -130,22 +131,19 @@ Game.prototype.buildLevel = function() {
     this.physics.startSystem(Phaser.Physics.ARCADE);
     
     // Creamos el player
-    this.navePlayer = this.add.sprite(this.world.centerX, this.world.height - this.worldOffsetV - this.HUDHeight, 'navePlayer');
-    this.navePlayer.enableBody = true;
-    this.navePlayer.physicsBodyType = Phaser.Physics.ARCADE;
-    this.navePlayer.anchor.setTo(0.5, 1);        
-    this.physics.arcade.enable(this.navePlayer);
+    this.createNavePlayer();
     
-    // disparos del player
-    this.playerBullets = this.add.group();
-    this.playerBullets.enableBody = true;
-    this.playerBullets.physicsBodyType = Phaser.Physics.ARCADE;
-    this.playerBullets.createMultiple(2, 'playerBullet');
-    this.playerBullets.setAll('anchor.x', 0.5);
-    this.playerBullets.setAll('anchor.y', 0);
-    this.playerBullets.setAll('outOfBoundsKill', true);
-    this.playerBullets.setAll('checkWorldBounds', true);
+    //Eenemies
+    this.alienGroup = this.add.group();
+    this.alienGroup.enableBody = true;
+        
+    //Nave nodriza bonus    
+    this.createMotherShip();
     
+    //Escudos
+    this.shields = this.add.group();
+    this.shields.enableBody = true;    
+        
     // HUD
     //linea separación del HUD
     var line = this.add.graphics(0, this.world.height - this.HUDHeight);
@@ -169,44 +167,27 @@ Game.prototype.buildLevel = function() {
     // Puntuaciones
     this.scoreText = this.add.text(0, this.worldOffsetV, this.scoreLabel  + this.fixedIntSize(0, 4),  this.textStyle);
     this.scoreText.x = this.world.width - this.worldOffsetH - this.scoreText.width;
+}
+
+Game.prototype.createNavePlayer = function() {
+    this.navePlayer = this.add.sprite(0, 0, 'navePlayer');
+    this.navePlayer.enableBody = true;
+    this.navePlayer.physicsBodyType = Phaser.Physics.ARCADE;
+    this.navePlayer.anchor.setTo(0.5, 1);        
+    this.physics.arcade.enable(this.navePlayer);
     
-    //Eenemies
-    this.alienGroup = this.add.group();
-    this.alienGroup.enableBody = true;    
-    this.createEnemies();
-    
-    //Nave nodriza bonus
-    
-    this.motherShipSpeed = 200;
-    this.motherShipwaitTimer = this.time.now + 10000;
-    this.motherShipwaitKilledInThisLevel = false;
-    
-    this.motherShip = this.add.sprite(-100, 65, 'motherShip');
-    this.motherShip.scale.set(0.5);
-    this.motherShip.enableBody = true;
-    this.motherShip.physicsBodyType = Phaser.Physics.ARCADE;
-    this.physics.arcade.enable(this.motherShip);
-    
-    //Escudos
-    this.shields = this.add.group();
-    this.shields.enableBody = true;    
-    for (var i = 0; i < 3; i++ ) {
-        
-        var baseBmp = this.make.bitmapData(80,70);
-        baseBmp.draw('shield', 0, 0, 80, 70);
-        baseBmp.update();
-        
-        var shieldX = this.world.width * 0.25 * ( i + 1) - baseBmp.width * 0.5;
-        var shieldY = this.world.height * 0.7;
-        
-        this.shields.create( shieldX, shieldY, baseBmp);
-        
-        this.shieldBmps.push({
-            bmp: baseBmp,
-            worldX: shieldX,
-            worldY: shieldY
-        });
-    }
+    // Creamos las balas del player
+    this.playerBullets = this.add.group();
+    this.playerBullets.enableBody = true;
+    this.playerBullets.physicsBodyType = Phaser.Physics.ARCADE;
+}
+
+Game.prototype.createPlayerBullets = function() {
+    this.playerBullets.createMultiple(2, 'playerBullet');
+    this.playerBullets.setAll('anchor.x', 0.5);
+    this.playerBullets.setAll('anchor.y', 0);
+    this.playerBullets.setAll('outOfBoundsKill', true);
+    this.playerBullets.setAll('checkWorldBounds', true);
 }
 
 Game.prototype.createEnemies = function() {
@@ -227,20 +208,80 @@ Game.prototype.createEnemies = function() {
                 alien.animations.add('step1',[0], 1);
                 alien.animations.add('step2',[1], 1);
                 alien.play('step1', 1);
-               //console.log("Creado " + alienName  + "[" + i + ", " + j + "]");
             }
         }
     }
     
+    // Balas de los enemigos
     this.enemyBullets = this.add.group();
     this.enemyBullets.enableBody = true;
-    this.enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
+    this.enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;    
+}
+
+Game.prototype.createEnemyBullets = function() {
     this.enemyBullets.createMultiple(1 * this.level, 'enemyBullet');
     this.enemyBullets.setAll('anchor.x', 0.5);
     this.enemyBullets.setAll('anchor.y', 0);
     this.enemyBullets.setAll('outOfBoundsKill', true);
     this.enemyBullets.setAll('checkWorldBounds', true);
+}
+
+Game.prototype.createMotherShip = function() {
+    this.motherShip = this.add.sprite(0, 0, 'motherShip');
+    this.motherShip.scale.set(0.5);
+    this.motherShip.enableBody = true;
+    this.motherShip.physicsBodyType = Phaser.Physics.ARCADE;
+    this.physics.arcade.enable(this.motherShip);
+    this.motherShip.kill();
+}
+
+Game.prototype.createShields = function() {
     
+    this.shieldBmps = [];
+    
+    for (var i = 0; i < 3; i++ ) {        
+        var baseBmp = this.make.bitmapData(80,70);
+        baseBmp.draw('shield', 0, 0, 80, 70);
+        baseBmp.update();
+        
+        var shieldX = this.world.width * 0.25 * ( i + 1) - baseBmp.width * 0.5;
+        var shieldY = this.world.height * 0.7;
+        
+        this.shields.create( shieldX, shieldY, baseBmp);
+        
+        this.shieldBmps.push({
+            bmp: baseBmp,
+            worldX: shieldX,
+            worldY: shieldY
+        });
+    }
+}
+
+Game.prototype.startLevel = function() {
+    // Seteamos el player
+    this.navePlayer.x = this.world.centerX;
+    this.navePlayer.y = this.world.height - this.worldOffsetV - this.HUDHeight;
+    
+    // Seteamos las balas del plaYer
+    this.playerBullets.removeAll();
+    this.createPlayerBullets();
+    
+    //Seteamos los enemigos
+    this.alienGroup.removeAll();
+    this.createEnemies();
+    
+    //Seteamos las balas de los enemigos
+    this.enemyBullets.removeAll();
+    this.createEnemyBullets();
+    
+    //Seteamos la nave de bonus
+    this.motherShipSpeed = this.level * 100;
+    this.motherShipwaitTimer = this.time.now + 10000;
+    this.motherShipwaitKilledInThisLevel = false;
+    
+    //Seteamos las defensas
+    this.shields.removeAll();
+    this.createShields();
 }
 
 Game.prototype.update = function () {
@@ -301,7 +342,14 @@ Game.prototype.updateEnemies = function() {
 Game.prototype.BonusMotherShipUpdate = function() {
     if (!this.motherShipwaitKilledInThisLevel) {
         if (this.time.now > this.motherShipwaitTimer) {
-            this.motherShip.body.velocity.x = this.motherShipSpeed;
+            if (!this.motherShip.alive){
+                this.motherShip.reset(-100, 65);
+                this.motherShip.body.velocity.x = this.motherShipSpeed;
+            }
+            if (this.motherShip.x > this.world.width) {
+                this.motherShip.kill();
+                this.motherShipwaitTimer = this.time.now + 10000;
+            }
         }
     }
 }
@@ -416,6 +464,10 @@ Game.prototype.playerBulletHitsEnemy = function(bullet, enemy) {
     //TODO: addPoints, create explosions, etc...
     this.playerScore += 10;
     this.scoreText.text = this.scoreLabel + this.fixedIntSize(this.playerScore, 4);
+    
+    if (this.alienGroup.countLiving() == 0) {
+        this.GotoNextLevel();
+    }
 }
 
 Game.prototype.enemyBulletHitsPlayer = function(player, enemyBullet) {
@@ -433,6 +485,7 @@ Game.prototype.playerBulletHitsMotherShip = function(bullet, motherShip) {
     // TODO: Add FX, points, etc...
     this.playerScore += 20;
     this.scoreText.text = this.scoreLabel + this.fixedIntSize(this.playerScore, 4);
+    this.motherShipwaitKilledInThisLevel = true;
 }
 
 Game.prototype.alienHitsPlayer = function(navePlayer, enemy) {
@@ -479,6 +532,11 @@ Game.prototype.explodeParticles = function(x, y, color, lifespan, number) {
     this.alienDeadEmitter.start(true, lifespan, null, number);
 }
 
+
+Game.prototype.GotoNextLevel = function() {
+    this.level++;
+    this.startLevel();
+}
 
 Game.prototype.fixedIntSize = function(num, size) {
     var s = "000000000" + num;
