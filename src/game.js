@@ -73,15 +73,17 @@ function Game() {
     this.HUDHeight;
     this.textStyle;
     this.textBoldStyle;
+    
     this.isPlaying;
+    this.loseLivesTimer;
+    this.loseLivesText;
     
 }
 
 Game.prototype.create = function () {
     this.init();    
     this.buildLevel();
-    this.startLevel();
-    
+    this.startLevel();    
 };
 
 Game.prototype.init = function() {
@@ -124,6 +126,7 @@ Game.prototype.init = function() {
     this.textBoldStyle = { font: "bold 32px silkscreen", fill: "#C2C2C2", align: "center" };
     
     this.isPlaying = true;
+    this.loseLivesTimer = 0;
 }
 
 Game.prototype.buildLevel = function() { 
@@ -155,6 +158,7 @@ Game.prototype.buildLevel = function() {
     
     // Texto de numero de vidas
     this.livesText = this.add.text(this.worldOffsetH, this.world.height - ((this.HUDHeight * 0.5) + 20), 3,  this.textStyle);    
+    
     this.lives = this.add.group();
     for (var i = 0; i < this.livesCount; i++ ) {
         var nave = this.lives.create(this.livesText.x + this.livesText.width + 10 + 60 * i, this.livesText.y + 7, 'navePlayer');
@@ -164,7 +168,7 @@ Game.prototype.buildLevel = function() {
     
     var textoCreditos = this.add.text(0, this.world.height - ((this.HUDHeight * 0.5) + 20), 'Space Invasion - By Sreveloc',  this.textBoldStyle);
     textoCreditos.x = this.world.width - this.worldOffsetH - textoCreditos.width;
-    
+        
     // Puntuaciones
     this.scoreText = this.add.text(0, this.worldOffsetV, this.scoreLabel  + this.fixedIntSize(0, 4),  this.textStyle);
     this.scoreText.x = this.world.width - this.worldOffsetH - this.scoreText.width;
@@ -259,7 +263,9 @@ Game.prototype.createShields = function() {
 }
 
 Game.prototype.startLevel = function() {
+    
     // Seteamos el player
+    this.navePlayer.revive();
     this.setPlayerStartPosition();
     
     // Seteamos las balas del plaYer
@@ -278,10 +284,21 @@ Game.prototype.startLevel = function() {
     this.motherShipSpeed = this.level * 100;
     this.motherShipwaitTimer = this.time.now + 10000;
     this.motherShipwaitKilledInThisLevel = false;
+    this.motherShip.kill();    
+    
+    // Reseteamos los textos
+    if (typeof this.loseLivesText != 'undefined')
+        this.loseLivesText.destroy();
     
     //Seteamos las defensas
     this.shields.removeAll();
     this.createShields();
+}
+
+Game.prototype.reStartGame = function() {
+    this.level = 1;
+    this.init();
+    this.startLevel();
 }
 
 Game.prototype.setPlayerStartPosition = function() {
@@ -303,7 +320,24 @@ Game.prototype.update = function () {
 
         this.updateCollisions();
     }
-    
+    else {
+        if (this.livesCount > 0) {
+            if (this.loseLivesTimer <= this.time.now) {
+                this.isPlaying = true;
+                this.loseLivesText.destroy();
+                this.navePlayer.revive();
+                this.setPlayerStartPosition();
+            }
+            else {
+                this.loseLivesText.text = "Hit by an alien bullet! \n ready in: " + ((this.loseLivesTimer - this.time.now)* 0.001).toFixed(1);
+            }            
+        } else {
+            this.loseLivesText.text = "- Game Over - \n Touch anywhere to restart";
+            if (this.input.activePointer.isDown || this.fireButton.isDown) {
+                this.reStartGame();
+            }
+        }
+    }
 };
 
 Game.prototype.updateEnemies = function() {
@@ -386,7 +420,8 @@ Game.prototype.checkInput = function() {
         this.playerCurrentSpeed += this.playerCurrentSpeed < this.PLAYER_MAX_SPEED? 0.5 : 0;
     }
     else {
-        this.playerCurrentSpeed -= this.playerCurrentSpeed > 0 ? 0.5 : 0;
+        this.playerCurrentSpeed -= this.playerCurrentSpeed > 0 ? 0.75 : 0;
+        if (this.playerCurrentSpeed < 0) this.playerCurrentSpeed = 0;
     }
     
     this.movePlayer();
@@ -454,12 +489,6 @@ Game.prototype.enemyFires = function( nextX ) {
     }
 }
 
-/*
-Game.prototype.resetBullet = function(bulet) {
-    bullet.kill();
-}
-*/
-
 Game.prototype.playerBulletHitsEnemy = function(bullet, enemy) {
     this.explodeParticles(enemy.x, enemy.y, 0xFFFFFF, 1500, 15);
     bullet.kill();
@@ -478,10 +507,7 @@ Game.prototype.playerBulletHitsEnemy = function(bullet, enemy) {
 Game.prototype.enemyBulletHitsPlayer = function(player, enemyBullet) {
     this.explodeParticles(enemyBullet.x, enemyBullet.y, 0xFFFFFF, 1500, 50);
     enemyBullet.kill();
-    console.log("Alcanzado por una bala enemiga");
     this.enemyAttackTimer = 0;
-    
-    //TODO: addPoints, create explosions, etc... 
     this.lives.getFirstExists(false);
     var live = this.lives.getFirstAlive();
 
@@ -490,7 +516,7 @@ Game.prototype.enemyBulletHitsPlayer = function(player, enemyBullet) {
         live.kill();
     }
     this.livesText.text = this.lives.countLiving();
-    this.setPlayerStartPosition()
+    this.PlayerLoseLives();
 }
 
 Game.prototype.playerBulletHitsMotherShip = function(bullet, motherShip) {
@@ -538,7 +564,7 @@ Game.prototype.bulletHitsShield = function(bullet, shield) {
 
 Game.prototype.alienHitsShield = function(bullet, shield) {
     shield.kill();
-    // TODO: Add FX
+    this.explodeParticles (shield.x, shield.y, 0x00FF00, 2000, 50);
 }
 
 Game.prototype.explodeParticles = function(x, y, color, lifespan, number) {
@@ -547,6 +573,17 @@ Game.prototype.explodeParticles = function(x, y, color, lifespan, number) {
     this.alienDeadEmitter.forEach(function(particle){ if (!particle.visible) particle.tint = color;}); 
     this.alienDeadEmitter.start(true, lifespan, null, number);
 }
+
+Game.prototype.PlayerLoseLives = function(){
+    this.playerCurrentSpeed = 0;
+    this.livesCount--;
+    this.navePlayer.kill();
+    this.loseLivesTimer = 3000 + this.time.now;
+    this.loseLivesText = this.add.text(this.world.centerX, this.world.centerY, this.livesCount > 0 ? "Hit by an alien bullet!" : "- GAME OVER -", this.textBoldStyle);
+    this.loseLivesText.anchor.setTo(0.5);
+    this.isPlaying = false;
+}
+
 
 
 Game.prototype.GotoNextLevel = function() {

@@ -1,5 +1,4 @@
 Mejoras pra cerrar versión 1.0:
-- Game Over
 - Highscores online (firebase)
 - Sonido
 

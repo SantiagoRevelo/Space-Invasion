@@ -3,6 +3,7 @@ function Menu() {
 	this.startPrompt;
     this.menuFontStyle;
     this.timer;
+    this.firebutton;
 }
 
 Menu.prototype.create = function () {
@@ -15,8 +16,7 @@ Menu.prototype.create = function () {
     startPrompt = this.add.text(this.world.centerX, this.world.centerY + 120, "- Touch to Start -", menuFontStyle);
     startPrompt.anchor.setTo(0.5, 0.5);
     timer = 0;
-    
-    
+    this.fireButton = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);    
 };
 
 Menu.prototype.update = function () {
@@ -25,6 +25,8 @@ Menu.prototype.update = function () {
         timer %= 400;
         startPrompt.visible = !startPrompt.visible;
     }
+    if (this.fireButton.isDown)
+        this.onInputDown();
 };
 
 Menu.prototype.onInputDown = function () {
