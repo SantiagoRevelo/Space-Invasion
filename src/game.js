@@ -129,8 +129,7 @@ Game.prototype.init = function() {
     this.loseLivesTimer = 0;
 }
 
-Game.prototype.buildLevel = function() { 
-    // this.stage.backgroundColor = "#4488AA";
+Game.prototype.buildLevel = function() {
     this.physics.startSystem(Phaser.Physics.ARCADE);
     
     // Creamos el player
