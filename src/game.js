@@ -4,29 +4,27 @@ function Game() {
     this.LEVELS_DEFINITION = [
         //level1
         [
-            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]
-        ],
-         [
             [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0]
         ],
-         [
+        //level2
+        [
             [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
-            [0, 0, 0, 0, 3, 2, 2, 3, 0, 0, 0]
-        ]
-      /*  //level1
+            [0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0]
+        ],
+        //level3
         [
             [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
-            [0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0]
+            [0, 0, 0, 2, 2, 0, 2, 2, 0, 0, 0],
+            [0, 0, 3, 3, 3, 0, 3, 3, 3, 0, 0]
         ],
-        //level2
+        //level4
         [
             [0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0],
             [0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
             [0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0],
             [3, 0, 0, 3, 3, 3, 3, 3, 0, 0, 3],
         ],
-        //level3
+        //level5
         [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -118,7 +116,7 @@ Game.prototype.init = function() {
     this.enemyHeight = 50;
     this.enemyDir = 1;
     this.enemySpeed = 25;
-    this.enemyTimerUpdate = 1000 ;
+    this.enemyTimerUpdate = 1000;
     this.livingEnemies = [];
     this.enemyAttackTimer = this.rnd.integerInRange(0, 5) * 1000 / this.level;
     
@@ -215,6 +213,8 @@ Game.prototype.createEnemies = function() {
     var startXpos = this.world.centerX - (this.LEVELS_DEFINITION[this.level-1][0].length/2 * this.enemyWidth) + (this.enemyWidth * 0.5);
     // La posicion en Y de los aliens empieza a partir de 100 + el alto de cada alien + un espacio de 20 pixels
     var startYpos = 150;
+    // Lavelocidad con la que se actualiza el avance de los enemigos.
+    this.enemyTimerUpdate = 1000;
     
     for (var i = 0; i < this.LEVELS_DEFINITION[this.level-1].length; i++) { // filas
         for (var j = 0; j < this.LEVELS_DEFINITION[this.level-1][i].length; j++) { // columnas
@@ -296,7 +296,7 @@ Game.prototype.startLevel = function() {
     this.createEnemyBullets();
     
     //Seteamos la nave de bonus
-    this.motherShipSpeed = this.level * 100;
+    this.motherShipSpeed = this.level * 66;
     this.motherShipwaitTimer = this.time.now + 10000;
     this.motherShipwaitKilledInThisLevel = false;
     this.motherShip.kill();    
@@ -505,10 +505,11 @@ Game.prototype.enemyFires = function( nextX ) {
         enemyBullet.reset(shooter.body.x + (shooter.width * 0.5) + nextX, shooter.body.y  + shooter.height);
         switch (this.level) {
             case 1:
+            case 2:
                 enemyBullet.body.velocity.y += 150;
                 break;                
             default:
-                this.physics.arcade.moveToObject(enemyBullet, this.navePlayer, 100 * this.level);
+                this.physics.arcade.moveToObject(enemyBullet, this.navePlayer, 66 * this.level);
                 break;
         }
         

@@ -1,5 +1,6 @@
 Mejoras pra cerrar versión 1.0:
+- pantalla highscores
 - Highscores online (firebase)
-- Sonido
-- Final Boss
-
+- final boss
+- pantalla de felicitacion
+- sonido
