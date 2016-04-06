@@ -4,6 +4,17 @@ function Game() {
     this.LEVELS_DEFINITION = [
         //level1
         [
+            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]
+        ],
+         [
+            [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0]
+        ],
+         [
+            [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 3, 2, 2, 3, 0, 0, 0]
+        ]
+      /*  //level1
+        [
             [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
             [0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0]
@@ -23,7 +34,7 @@ function Game() {
             [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
             [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
             [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
-        ]
+        ]*/
     ];
         
     //Variables
@@ -75,8 +86,11 @@ function Game() {
     this.textBoldStyle;
     
     this.isPlaying;
+    this.isPauseBetweenLevels;
     this.loseLivesTimer;
+    this.pauseBetweenLevelsTimer;
     this.loseLivesText;
+    this.pauseBetweenLevelsText;
     
 }
 
@@ -124,9 +138,11 @@ Game.prototype.init = function() {
     
     this.textStyle = { font: "32px silkscreen", fill: "#C2C2C2", align: "center" };
     this.textBoldStyle = { font: "bold 32px silkscreen", fill: "#C2C2C2", align: "center" };
+    this.textGreenBoldStyle = { font: "bold 32px silkscreen", fill: "#00FF00", align: "center" };
     
     this.isPlaying = true;
     this.loseLivesTimer = 0;
+    this.pauseBetweenLevelsTimer = 0;
 }
 
 Game.prototype.buildLevel = function() {
@@ -335,6 +351,18 @@ Game.prototype.update = function () {
             if (this.input.activePointer.isDown || this.fireButton.isDown) {
                 this.reStartGame();
             }
+        }
+    }
+    
+    if (this.isPauseBetweenLevels) {
+        if (this.pauseBetweenLevelsTimer <= this.time.now) {
+            this.isPauseBetweenLevels = false;
+            this.pauseBetweenLevelsText.destroy();
+            this.level++;
+            this.startLevel();            
+        }
+        else {
+            this.pauseBetweenLevelsText.text = "Well done!!!\n But it is not time to declare victory yet\n Next alien wave in: " + ((this.pauseBetweenLevelsTimer - this.time.now)* 0.001).toFixed(1);
         }
     }
 };
@@ -578,16 +606,17 @@ Game.prototype.PlayerLoseLives = function(){
     this.livesCount--;
     this.navePlayer.kill();
     this.loseLivesTimer = 3000 + this.time.now;
-    this.loseLivesText = this.add.text(this.world.centerX, this.world.centerY, this.livesCount > 0 ? "Hit by an alien bullet!" : "- GAME OVER -", this.textBoldStyle);
+    this.loseLivesText = this.add.text(this.world.centerX, this.world.centerY, this.livesCount > 0 ? "Hit by an alien bullet!" : "- GAME OVER -", this.textGreenBoldStyle);
     this.loseLivesText.anchor.setTo(0.5);
     this.isPlaying = false;
 }
 
-
-
 Game.prototype.GotoNextLevel = function() {
-    this.level++;
-    this.startLevel();
+    this.isPauseBetweenLevels = true;
+    this.pauseBetweenLevelsTimer = this.time.now + 4000;
+    this.enemyBullets.removeAll();
+    this.pauseBetweenLevelsText = this.add.text(this.world.centerX, this.world.centerY, "", this.textGreenBoldStyle);
+    this.pauseBetweenLevelsText.anchor.setTo(0.5);
 }
 
 Game.prototype.fixedIntSize = function(num, size) {

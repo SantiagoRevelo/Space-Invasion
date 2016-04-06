@@ -1,4 +1,5 @@
 Mejoras pra cerrar versión 1.0:
 - Highscores online (firebase)
 - Sonido
+- Final Boss
 
