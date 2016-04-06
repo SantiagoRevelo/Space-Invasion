@@ -121,7 +121,8 @@ Game.prototype.init = function() {
     this.enemyAttackTimer = this.rnd.integerInRange(0, 5) * 1000 / this.level;
     
     this.shieldDamageBmp = this.make.bitmapData(28, 28);
-    this.shieldDamageBmp.circle(14,14,14, 'rgba(0, 0, 0, 255)');    
+    //this.shieldDamageBmp.circle(14,14,14, 'rgba(0, 0, 0, 255)');
+    this.shieldDamageBmp.rect(8, 10, 16, 20, 'rgba(0, 0, 0, 255)');
     this.shieldDamageBmp.update();
         
     this.alienDeadEmitter = this.add.emitter(0, 0, 100);
