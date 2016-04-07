@@ -90,12 +90,35 @@ function Game() {
     this.loseLivesText;
     this.pauseBetweenLevelsText;
     
+    this.scanlineFilter;    
 }
 
 Game.prototype.create = function () {
     this.init();    
     this.buildLevel();
     this.startLevel();    
+    var fragmentSrc = [
+        "precision mediump float;",
+        // Incoming texture coordinates. 
+        'varying vec2 vTextureCoord;',
+        // Incoming vertex color
+        'varying vec4 vColor;',
+        // Sampler for a) sprite image or b) rendertarget in case of game.world.filter
+        'uniform sampler2D uSampler;',
+
+        "uniform vec2      resolution;",
+        "uniform float     time;",
+        "uniform vec2      mouse;",
+
+        "void main( void ) {",
+        // colorRGBA = (y % 2) * texel(u,v);
+        "gl_FragColor = mod((gl_FragCoord.y)/1.5,2.0) * texture2D(uSampler, vTextureCoord);",
+        "}"
+    ];
+
+    this.scanlineFilter = new Phaser.Filter(this, null, fragmentSrc);
+    this.world.filters = [this.scanlineFilter];   
+    
 };
 
 Game.prototype.init = function() {
@@ -323,6 +346,9 @@ Game.prototype.setPlayerStartPosition = function() {
 }
 
 Game.prototype.update = function () {
+    
+    this.scanlineFilter.update(this.input.mousePointer);
+    
     this.myTimer += this.time.elapsed;
     
     if (this.isPlaying === true) {
