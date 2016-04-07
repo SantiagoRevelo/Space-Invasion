@@ -1,4 +1,9 @@
 function Game() {
+    //FILTER STUFF 
+    this.filter = [];
+    this.FILTER_VIGNETTE = 0;
+    this.FILTER_FILMGRAIN = 1;
+    
     // CONSTANTS
     this.PLAYER_MAX_SPEED = 10;
     this.LEVELS_DEFINITION = [
@@ -90,36 +95,32 @@ function Game() {
     this.loseLivesText;
     this.pauseBetweenLevelsText;
     
-    this.scanlineFilter;    
+    this.scanlines;
 }
 
 Game.prototype.create = function () {
-    this.init();    
-    this.buildLevel();
-    this.startLevel();    
-    var fragmentSrc = [
-        "precision mediump float;",
-        // Incoming texture coordinates. 
-        'varying vec2 vTextureCoord;',
-        // Incoming vertex color
-        'varying vec4 vColor;',
-        // Sampler for a) sprite image or b) rendertarget in case of game.world.filter
-        'uniform sampler2D uSampler;',
-
-        "uniform vec2      resolution;",
-        "uniform float     time;",
-        "uniform vec2      mouse;",
-
-        "void main( void ) {",
-        // colorRGBA = (y % 2) * texel(u,v);
-        "gl_FragColor = mod((gl_FragCoord.y)/1.5,2.0) * texture2D(uSampler, vTextureCoord);",
-        "}"
-    ];
-
-    this.scanlineFilter = new Phaser.Filter(this, null, fragmentSrc);
-    this.world.filters = [this.scanlineFilter];   
+    this.init();
     
+    this.initializeFilters();
+    
+    this.stage.filters = [this.filter[this.FILTER_FILMGRAIN], this.filter[this.FILTER_VIGNETTE]];
+    
+    this.buildLevel();
+    this.startLevel();
 };
+
+Game.prototype.initializeFilters = function() {
+    //FILTERS
+    this.filter[this.FILTER_VIGNETTE] = this.add.filter('Vignette');
+    this.filter[this.FILTER_VIGNETTE].size = 0.2;
+    this.filter[this.FILTER_VIGNETTE].amount = 0.5;
+    this.filter[this.FILTER_VIGNETTE].alpha = 1.0;
+    
+    this.filter[this.FILTER_FILMGRAIN] = this.add.filter('FilmGrain');
+    this.filter[this.FILTER_FILMGRAIN].color = 0.6;
+    this.filter[this.FILTER_FILMGRAIN].amount = 0.08;
+    this.filter[this.FILTER_FILMGRAIN].luminance = 0.9;
+}
 
 Game.prototype.init = function() {
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -159,7 +160,7 @@ Game.prototype.init = function() {
     this.HUDHeight = 80;
     
     this.textStyle = { font: "32px silkscreen", fill: "#C2C2C2", align: "center" };
-    this.textBoldStyle = { font: "bold 32px silkscreen", fill: "#C2C2C2", align: "center" };
+    this.textBoldStyle = { font: "bold 32px silkscreen", fill: "#FFFFFF", align: "center" };
     this.textGreenBoldStyle = { font: "bold 32px silkscreen", fill: "#00FF00", align: "center" };
     
     this.isPlaying = true;
@@ -332,6 +333,11 @@ Game.prototype.startLevel = function() {
     //Seteamos las defensas
     this.shields.removeAll();
     this.createShields();
+    
+    //SCANLINES
+    this.scanlines = this.add.sprite(0,0,'scanlines');
+    //this.scanlines.blendMode = PIXI.blendModes.SCREEN;
+    this.scanlines.alpha = 0.3;
 }
 
 Game.prototype.reStartGame = function() {
@@ -346,9 +352,10 @@ Game.prototype.setPlayerStartPosition = function() {
 }
 
 Game.prototype.update = function () {
-    
-    this.scanlineFilter.update(this.input.mousePointer);
-    
+    //FILTERS
+    var f = this.filter[this.FILTER_FILMGRAIN];
+    f.update();
+
     this.myTimer += this.time.elapsed;
     
     if (this.isPlaying === true) {
