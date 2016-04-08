@@ -9,6 +9,7 @@ function Menu() {
     this.filter = [];
     this.FILTER_VIGNETTE = 0;
     this.FILTER_FILMGRAIN = 1;
+    this.FILTER_BULGEPINCH = 2;
 }
 
 Menu.prototype.create = function () {
@@ -25,7 +26,12 @@ Menu.prototype.create = function () {
     this.filter[this.FILTER_FILMGRAIN].amount = 0.08;
     this.filter[this.FILTER_FILMGRAIN].luminance = 0.9;
     
-    this.stage.filters = [this.filter[this.FILTER_FILMGRAIN], this.filter[this.FILTER_VIGNETTE]];
+    this.filter[this.FILTER_BULGEPINCH] = this.add.filter('BulgePinch');
+    this.filter[this.FILTER_BULGEPINCH].center = {x:this.world.centerX, y:this.world.centerY};
+    this.filter[this.FILTER_BULGEPINCH].radius = 0.75;
+    this.filter[this.FILTER_BULGEPINCH].strength = 0.7;
+    
+    this.stage.filters = [this.filter[this.FILTER_VIGNETTE], this.filter[this.FILTER_FILMGRAIN]/*, this.filter[this.FILTER_BULGEPINCH]*/];
     
     startBg.inputEnabled = true;		
     startBg.events.onInputDown.addOnce(this.onInputDown, this);

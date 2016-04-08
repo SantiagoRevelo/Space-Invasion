@@ -32,8 +32,9 @@ Preloader.prototype.loadResources = function () {
     this.load.spritesheet('alien3', '../assets/images/alien3.png', 40, 40, 2);
     
     //FILTERS
-    this.load.script('filter-vignette','../assets/filters/Vignette.js');
-    this.load.script('filter-filmgrain','../assets/filters/FilmGrain.js');
+    this.load.script('filter-vignette',  '../assets/filters/Vignette.js');
+    this.load.script('filter-filmgrain', '../assets/filters/FilmGrain.js');
+    this.load.script('filter-bulgepinch','../assets/filters/BulgePinch.js');
 };
 
 Preloader.prototype.create = function () {
