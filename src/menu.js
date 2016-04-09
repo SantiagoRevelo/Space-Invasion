@@ -7,15 +7,20 @@ function Menu() {
     
     //FILTER STUFF 
     this.filter = [];
-    this.FILTER_VIGNETTE = 0;
-    this.FILTER_FILMGRAIN = 1;
-    this.FILTER_BULGEPINCH = 2;
+    //this.FILTER_VIGNETTE = 0;
+    //this.FILTER_FILMGRAIN = 1;
+    //this.FILTER_CRT = 3;
+    this.FILTER_BULGEPINCH = 0;
+    
+    
+    //this.myDataRef = new Firebase('https://boiling-torch-7482.firebaseio.com/');
 }
 
 Menu.prototype.create = function () {
     //creamos el sprite del fondo y hacemos que se pueda clicar
     startBg = this.add.sprite(0, 0, 'fondo');
      //FILTERS
+    
     this.filter[this.FILTER_VIGNETTE] = this.add.filter('Vignette');
     this.filter[this.FILTER_VIGNETTE].size = 0.2;
     this.filter[this.FILTER_VIGNETTE].amount = 0.5;
@@ -26,15 +31,11 @@ Menu.prototype.create = function () {
     this.filter[this.FILTER_FILMGRAIN].amount = 0.08;
     this.filter[this.FILTER_FILMGRAIN].luminance = 0.9;
     
-    this.filter[this.FILTER_BULGEPINCH] = this.add.filter('BulgePinch');
-    this.filter[this.FILTER_BULGEPINCH].center = {x:this.world.centerX, y:this.world.centerY};
-    this.filter[this.FILTER_BULGEPINCH].radius = 0.75;
-    this.filter[this.FILTER_BULGEPINCH].strength = 0.7;
-    
-    this.stage.filters = [this.filter[this.FILTER_VIGNETTE], this.filter[this.FILTER_FILMGRAIN]/*, this.filter[this.FILTER_BULGEPINCH]*/];
+    this.stage.filters = [this.filter[this.FILTER_VIGNETTE], this.filter[this.FILTER_FILMGRAIN]];
     
     startBg.inputEnabled = true;		
     startBg.events.onInputDown.addOnce(this.onInputDown, this);
+    
 
     menuFontStyle = { font: "bold 32px silkscreen", fill: "#ffffff", align: "center" };
     startPrompt = this.add.text(this.world.centerX, this.world.centerY + 120, "- Touch to Start -", menuFontStyle);
