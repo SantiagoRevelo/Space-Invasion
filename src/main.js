@@ -1,3 +1,4 @@
+
 var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'SpaceInvader-game');
 game.state.add('boot', require('./boot'));
 game.state.add('preloader', require('./preloader'));

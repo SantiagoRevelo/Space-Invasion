@@ -9,7 +9,7 @@ Yeoman + generator-phaser
 Se necesita NodeJs instalado:
 - npm install -> para actualizar las referencias
 - npm start -> para activar el server
-- npm build -> para deploy
+- npm run build -> para deploy
 
 
 By: Santiago Revelo

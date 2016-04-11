@@ -1,6 +1,7 @@
 function Preloader() {
     this.asset = null;
     this.ready = false;
+    this.isFontsLoaded = false;
 }
 
 Preloader.prototype.preload = function () {
@@ -12,7 +13,24 @@ Preloader.prototype.preload = function () {
     this.loadResources();
 };
 
+Preloader.prototype.fontsLoaded = function() {
+    this.isFontsLoaded = true;
+}
+
 Preloader.prototype.loadResources = function () {
+    
+    //  The Google WebFont Loader will look for this object, so create it before loading the script.
+    WebFontConfig = {
+        //  'active' means all requested fonts have finished loading
+        //  We set a 1 second delay before calling 'createText'.
+        //  For some reason if we don't the browser cannot render the text the first time it's created.
+        active: this.fontsLoaded(),
+        //  The Google Fonts we want to load (specify as many as you like in the array)
+        google: { families: [ 'Press+Start+2P::latin' ] }
+
+    };
+    //FONT
+    this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
     
     //OVERLAYS
     this.load.image('scanlines','../assets/images/scanlines.png');
@@ -31,9 +49,8 @@ Preloader.prototype.loadResources = function () {
     this.load.spritesheet('alien2', '../assets/images/alien2.png', 40, 40, 2);
     this.load.spritesheet('alien3', '../assets/images/alien3.png', 40, 40, 2);
     
-    //FILTERS
-    this.load.script('filter-vignette',     '../src/filters/Vignette.js');
-    this.load.script('filter-filmgrain',    '../src/filters/FilmGrain.js');
+    //FILTER
+    this.load.shader('crtFilter', '../src/filters/crt.frag');
 };
 
 Preloader.prototype.create = function () {
@@ -41,7 +58,7 @@ Preloader.prototype.create = function () {
 };
 
 Preloader.prototype.update = function () {
-  if (!!this.ready) {
+  if (!!this.ready && this.isFontsLoaded) {
       this.game.state.start('menu');
      // this.game.state.start('game');
   }

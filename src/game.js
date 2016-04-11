@@ -95,6 +95,7 @@ function Game() {
     this.loseLivesText;
     this.pauseBetweenLevelsText;
     
+    this.singleFilter;
     this.scanlines;
 }
 
@@ -103,15 +104,13 @@ Game.prototype.create = function () {
     
     this.initializeFilters();
     
-    this.stage.filters = [this.filter[this.FILTER_FILMGRAIN], this.filter[this.FILTER_VIGNETTE]];
-    
     this.buildLevel();
     this.startLevel();
 };
 
 Game.prototype.initializeFilters = function() {
     //FILTERS
-    this.filter[this.FILTER_VIGNETTE] = this.add.filter('Vignette');
+    /*this.filter[this.FILTER_VIGNETTE] = this.add.filter('Vignette');
     this.filter[this.FILTER_VIGNETTE].size = 0.2;
     this.filter[this.FILTER_VIGNETTE].amount = 0.5;
     this.filter[this.FILTER_VIGNETTE].alpha = 1.0;
@@ -120,6 +119,12 @@ Game.prototype.initializeFilters = function() {
     this.filter[this.FILTER_FILMGRAIN].color = 0.6;
     this.filter[this.FILTER_FILMGRAIN].amount = 0.08;
     this.filter[this.FILTER_FILMGRAIN].luminance = 0.9;
+    this.stage.filters = [this.filter[this.FILTER_FILMGRAIN], this.filter[this.FILTER_VIGNETTE]];
+    */
+    //Add the CRT Filter
+    this.singleFilter = new Phaser.Filter(this, null, this.cache.getShader('crtFilter'));
+    this.singleFilter.setResolution(this.world.width, this.world.height);
+    this.stage.filters = [this.singleFilter];   
 }
 
 Game.prototype.init = function() {
@@ -159,9 +164,9 @@ Game.prototype.init = function() {
     this.worldOffsetV = 20;
     this.HUDHeight = 80;
     
-    this.textStyle = { font: "32px silkscreen", fill: "#C2C2C2", align: "center" };
-    this.textBoldStyle = { font: "bold 32px silkscreen", fill: "#FFFFFF", align: "center" };
-    this.textGreenBoldStyle = { font: "bold 32px silkscreen", fill: "#00FF00", align: "center" };
+    this.textStyle = { font: "28px 'Press Start 2P', cursive", fill: "#C2C2C2", align: "center" };
+    this.textBoldStyle = { font: "bold 26px 'Press Start 2P', cursive", fill: "#FFFFFF", align: "center" };
+    this.textGreenBoldStyle = { font: "bold 28px 'Press Start 2P', cursive", fill: "#00FF00", align: "center" };
     
     this.isPlaying = true;
     this.loseLivesTimer = 0;
@@ -335,9 +340,8 @@ Game.prototype.startLevel = function() {
     this.createShields();
     
     //SCANLINES
-    this.scanlines = this.add.sprite(0,0,'scanlines');
-    //this.scanlines.blendMode = PIXI.blendModes.SCREEN;
-    this.scanlines.alpha = 0.3;
+    //this.scanlines = this.add.sprite(0,0,'scanlines');
+    //this.scanlines.alpha = 0.3;
 }
 
 Game.prototype.reStartGame = function() {
@@ -352,9 +356,6 @@ Game.prototype.setPlayerStartPosition = function() {
 }
 
 Game.prototype.update = function () {
-    //FILTERS
-    var f = this.filter[this.FILTER_FILMGRAIN];
-    f.update();
 
     this.myTimer += this.time.elapsed;
     
@@ -399,6 +400,9 @@ Game.prototype.update = function () {
             this.pauseBetweenLevelsText.text = "Well done!!!\n But it is not time to declare victory yet\n Next alien wave in: " + ((this.pauseBetweenLevelsTimer - this.time.now)* 0.001).toFixed(1);
         }
     }
+    
+    //FILTERS
+    //this.singleFilter.update();
 };
 
 Game.prototype.updateEnemies = function() {
