@@ -1,2 +1,5 @@
-build/*
-node_modules/*
+.DS_Store
+*.db
+build/
+node_modules/
+
