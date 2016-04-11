@@ -145,7 +145,6 @@ Game.prototype.init = function() {
     this.enemyHeight = 50;
     this.enemyDir = 1;
     this.enemySpeed = 25;
-    this.enemyTimerUpdate = 1000;
     this.livingEnemies = [];
     this.enemyAttackTimer = this.rnd.integerInRange(0, 5) * 1000 / this.level;
     
@@ -339,6 +338,14 @@ Game.prototype.startLevel = function() {
     this.shields.removeAll();
     this.createShields();
     
+    // Recreamos las vidas
+    this.lives.removeAll();
+    this.lives = this.add.group();
+    for (var i = 0; i < this.livesCount; i++ ) {
+        var nave = this.lives.create(this.livesText.x + this.livesText.width + 10 + 60 * i, this.livesText.y + 7, 'navePlayer');
+        nave.tint = 0x00FF00;
+    }
+    this.livesText.text = this.livesCount;
     //SCANLINES
     //this.scanlines = this.add.sprite(0,0,'scanlines');
     //this.scanlines.alpha = 0.3;
@@ -381,7 +388,8 @@ Game.prototype.update = function () {
             else {
                 this.loseLivesText.text = "Hit by an alien bullet! \n ready in: " + ((this.loseLivesTimer - this.time.now)* 0.001).toFixed(1);
             }            
-        } else {
+        }
+        if (this.livesCount <= 0) {
             this.loseLivesText.text = "- Game Over - \n Touch anywhere to restart";
             if (this.input.activePointer.isDown || this.fireButton.isDown) {
                 this.reStartGame();
@@ -582,6 +590,7 @@ Game.prototype.enemyBulletHitsPlayer = function(player, enemyBullet) {
         live.kill();
     }
     this.livesText.text = this.lives.countLiving();
+    this.livesCount--;
     this.PlayerLoseLives();
 }
 
@@ -598,9 +607,13 @@ Game.prototype.playerBulletHitsMotherShip = function(bullet, motherShip) {
 
 Game.prototype.alienHitsPlayer = function(navePlayer, enemy) {
     console.log("Game Over");
-    this.isPlaying = !this.isPlaying;
+    this.lives.removeAll();
+    this.livesCount = 0;
+    this.livesText.text = this.lives.countLiving();
+    this.isPlaying = false;
+    this.loseLivesText = this.add.text(this.world.centerX, this.world.centerY, "", this.textGreenBoldStyle);
+    this.loseLivesText.anchor.setTo(0.5);
 }
-
 
 Game.prototype.bulletHitsShield = function(bullet, shield) {
     console.log("impacto en la defensa");
@@ -642,7 +655,6 @@ Game.prototype.explodeParticles = function(x, y, color, lifespan, number) {
 
 Game.prototype.PlayerLoseLives = function(){
     this.playerCurrentSpeed = 0;
-    this.livesCount--;
     this.navePlayer.kill();
     this.loseLivesTimer = 3000 + this.time.now;
     this.loseLivesText = this.add.text(this.world.centerX, this.world.centerY, this.livesCount > 0 ? "Hit by an alien bullet!" : "- GAME OVER -", this.textGreenBoldStyle);
