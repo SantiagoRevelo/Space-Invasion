@@ -25,9 +25,11 @@ Menu.prototype.create = function () {
     this.startBg.events.onInputDown.addOnce(this.onInputDown, this);
     
     //Add the CRT Filter
+    
     this.singleFilter = new Phaser.Filter(this, null, this.cache.getShader('crtFilter'));
     this.singleFilter.setResolution(this.world.width, this.world.height);
     this.stage.filters = [this.singleFilter];    
+    
     
     //Add the scanlines
     //scanlines = this.add.sprite(0,0,'scanlines');

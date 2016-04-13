@@ -33,24 +33,24 @@ Preloader.prototype.loadResources = function () {
     this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
     
     //OVERLAYS
-    this.load.image('scanlines','../assets/images/scanlines.png');
+    this.load.image('scanlines','assets/images/scanlines.png');
     
     // IMAGES
-    this.load.image('fondo',  '../assets/images/titleBg.png');
-    this.load.image('navePlayer', '../assets/images/ship.png');
-    this.load.image('shield', '../assets/images/shield.png');
-    this.load.image('motherShip', '../assets/images/motherShip.png');
-    this.load.image('enemyBullet', '../assets/images/bomb.png');
-    this.load.image('playerBullet', '../assets/images/bullet.png');
-    this.load.image('pixel', '../assets/images/pixel.jpg');
+    this.load.image('fondo',  'assets/images/titleBg.png');
+    this.load.image('navePlayer', 'assets/images/ship.png');
+    this.load.image('shield', 'assets/images/shield.png');
+    this.load.image('motherShip', 'assets/images/motherShip.png');
+    this.load.image('enemyBullet', 'assets/images/bomb.png');
+    this.load.image('playerBullet', 'assets/images/bullet.png');
+    this.load.image('pixel', 'assets/images/pixel.jpg');
     
     // SECUENCIAS
-    this.load.spritesheet('alien1', '../assets/images/alien1.png', 40, 40, 2);
-    this.load.spritesheet('alien2', '../assets/images/alien2.png', 40, 40, 2);
-    this.load.spritesheet('alien3', '../assets/images/alien3.png', 40, 40, 2);
+    this.load.spritesheet('alien1', 'assets/images/alien1.png', 40, 40, 2);
+    this.load.spritesheet('alien2', 'assets/images/alien2.png', 40, 40, 2);
+    this.load.spritesheet('alien3', 'assets/images/alien3.png', 40, 40, 2);
     
     //FILTER
-    this.load.shader('crtFilter', '../src/filters/crt.frag');
+    this.load.shader('crtFilter', 'src/filters/crt.frag');
 };
 
 Preloader.prototype.create = function () {
