@@ -56,7 +56,8 @@ Menu.prototype.onInputDown = function () {
     if (!this.game.device.desktop) {
         this.scale.startFullScreen ();
     }
-    this.game.state.start('game');
+    //this.game.state.start('game');
+  this.game.state.start('highscores');
 };
 
 module.exports = Menu;
