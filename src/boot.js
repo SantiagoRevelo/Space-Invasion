@@ -1,4 +1,4 @@
-function Boot() {}
+function Boot() {};
 
 Boot.prototype.init = function () {
     this.input.maxPointers = 1;

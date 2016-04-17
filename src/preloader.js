@@ -2,7 +2,7 @@ function Preloader() {
     this.asset = null;
     this.ready = false;
     this.isFontsLoaded = false;
-}
+};
 
 Preloader.prototype.preload = function () {
     this.asset = this.add.sprite(this.world.centerX, this.world.centerY, 'loadingAnim');
@@ -31,6 +31,9 @@ Preloader.prototype.loadResources = function () {
     };
     //FONT
     this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+
+    // ONLINE SCORES
+    fbs.preload();
     
     //OVERLAYS
     this.load.image('scanlines','assets/images/scanlines.png');

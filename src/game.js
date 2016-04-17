@@ -95,7 +95,7 @@ function Game() {
     
     this.singleFilter;
     this.scanlines;
-}
+};
 
 Game.prototype.create = function () {
     this.init();
@@ -112,7 +112,7 @@ Game.prototype.initializeFilters = function() {
     this.singleFilter = new Phaser.Filter(this, null, this.cache.getShader('crtFilter'));
     this.singleFilter.setResolution(this.world.width, this.world.height);
     this.stage.filters = [this.singleFilter];   
-}
+};
 
 Game.prototype.init = function() {
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -161,7 +161,7 @@ Game.prototype.init = function() {
     this.isPlaying = true;
     this.loseLivesTimer = 0;
     this.pauseBetweenLevelsTimer = 0;
-}
+};
 
 Game.prototype.buildLevel = function() {
     this.physics.startSystem(Phaser.Physics.ARCADE);
@@ -214,7 +214,7 @@ Game.prototype.buildLevel = function() {
     // Puntuaciones
     this.scoreText = this.add.text(0, this.worldOffsetV, this.scoreLabel  + this.fixedIntSize(0, 4),  this.textStyle);
     this.scoreText.x = this.world.width - this.worldOffsetH - this.scoreText.width;
-}
+};
 
 Game.prototype.createNavePlayer = function() {
     this.navePlayer = this.add.sprite(0, 0, 'navePlayer');
@@ -227,7 +227,7 @@ Game.prototype.createNavePlayer = function() {
     this.playerBullets = this.add.group();
     this.playerBullets.enableBody = true;
     this.playerBullets.physicsBodyType = Phaser.Physics.ARCADE;
-}
+};
 
 Game.prototype.createPlayerBullets = function() {
     this.playerBullets.createMultiple(2, 'playerBullet');
@@ -235,7 +235,7 @@ Game.prototype.createPlayerBullets = function() {
     this.playerBullets.setAll('anchor.y', 0);
     this.playerBullets.setAll('outOfBoundsKill', true);
     this.playerBullets.setAll('checkWorldBounds', true);
-}
+};
 
 Game.prototype.createEnemies = function() {
     // La posicion del primer alien en X la calculamos así: centroaAntallaX - (totalAliens/2 * ancho) + (ancho * 0.5) 
@@ -265,7 +265,7 @@ Game.prototype.createEnemies = function() {
     this.enemyBullets = this.add.group();
     this.enemyBullets.enableBody = true;
     this.enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;    
-}
+};
 
 Game.prototype.createEnemyBullets = function() {
     this.enemyBullets.createMultiple(1 * this.level, 'enemyBullet');
@@ -273,7 +273,7 @@ Game.prototype.createEnemyBullets = function() {
     this.enemyBullets.setAll('anchor.y', 0);
     this.enemyBullets.setAll('outOfBoundsKill', true);
     this.enemyBullets.setAll('checkWorldBounds', true);
-}
+};
 
 Game.prototype.createMotherShip = function() {
     this.motherShip = this.add.sprite(0, 0, 'motherShip');
@@ -282,7 +282,7 @@ Game.prototype.createMotherShip = function() {
     this.motherShip.physicsBodyType = Phaser.Physics.ARCADE;
     this.physics.arcade.enable(this.motherShip);
     this.motherShip.kill();
-}
+};
 
 Game.prototype.createShields = function() {
     
@@ -311,7 +311,7 @@ Game.prototype.createShields = function() {
         this.shieldsenablebody = true;
         this.shields.physicsBodyType = Phaser.Physics.ARCADE; 
     this.shields.setAll('body.immovable', true);
-}
+};
 
 Game.prototype.startLevel = function() {
     
@@ -356,18 +356,18 @@ Game.prototype.startLevel = function() {
     //SCANLINES
     //this.scanlines = this.add.sprite(0,0,'scanlines');
     //this.scanlines.alpha = 0.3;
-}
+};
 
 Game.prototype.reStartGame = function() {
     this.level = 1;
     this.init();
     this.startLevel();
-}
+};
 
 Game.prototype.setPlayerStartPosition = function() {
     this.navePlayer.x = this.world.centerX;
     this.navePlayer.y = this.world.height - this.worldOffsetV - this.HUDHeight;
-}
+};
 
 Game.prototype.update = function () {
 
@@ -456,7 +456,7 @@ Game.prototype.updateEnemies = function() {
             // le pasamos el incremento en el eje X para corregir la posición de la bala
             this.enemyFires(alienIncH);
         }
-}
+};
 
 Game.prototype.BonusMotherShipUpdate = function() {
     if (!this.motherShipwaitKilledInThisLevel) {
@@ -471,7 +471,7 @@ Game.prototype.BonusMotherShipUpdate = function() {
             }
         }
     }
-}
+};
 
 Game.prototype.checkInput = function() {
     var isMoving = false;
@@ -511,7 +511,7 @@ Game.prototype.checkInput = function() {
         this.fireBullet();
     }
     
-}
+};
 
 Game.prototype.updateCollisions = function() {
     this.physics.arcade.overlap(this.playerBullets, this.alienGroup, this.playerBulletHitsEnemy, null, this);
@@ -525,7 +525,7 @@ Game.prototype.updateCollisions = function() {
     this.physics.arcade.collide(this.enemyBullets, this.HUDBorder, this.enemyBulletTouchGround);
     this.physics.arcade.collide(this.alienDeadEmitter, this.HUDBorder);
    this.physics.arcade.collide(this.shields, this.alienDeadEmitter);
-}
+};
 
 Game.prototype.movePlayer = function() {
 
@@ -534,7 +534,7 @@ Game.prototype.movePlayer = function() {
     if (this.navePlayer.x + inc >= this.worldOffsetH && this.navePlayer.x + inc  <= this.world.width - this.worldOffsetH) {
         this.navePlayer.x += inc;
     }
-}
+};
 
 Game.prototype.fireBullet = function() {
     if(this.time.now > this.playerAttackTime) {
@@ -546,7 +546,7 @@ Game.prototype.fireBullet = function() {
             this.playerAttackTime = this.time.now + 2000;
         }
     }
-}
+};
 
 Game.prototype.enemyFires = function( nextX ) {
     var enemyBullet = this.enemyBullets.getFirstExists(false);
@@ -573,7 +573,7 @@ Game.prototype.enemyFires = function( nextX ) {
         
         this.enemyAttackTimer = this.time.now + this.rnd.integerInRange(0, 4) * 1000 / this.level;
     }
-}
+};
 
 Game.prototype.playerBulletHitsEnemy = function(bullet, enemy) {
     this.explodeParticles(enemy.x, enemy.y, 0xFFFFFF, 1500, 15);
@@ -588,7 +588,7 @@ Game.prototype.playerBulletHitsEnemy = function(bullet, enemy) {
     if (this.alienGroup.countLiving() == 0) {
         this.GotoNextLevel();
     }
-}
+};
 
 Game.prototype.enemyBulletHitsPlayer = function(player, enemyBullet) {
     this.explodeParticles(enemyBullet.x, enemyBullet.y, 0xFFFFFF, 1500, 50);
@@ -604,7 +604,7 @@ Game.prototype.enemyBulletHitsPlayer = function(player, enemyBullet) {
     this.livesText.text = this.lives.countLiving();
     this.livesCount--;
     this.PlayerLoseLives();
-}
+};
 
 Game.prototype.playerBulletHitsMotherShip = function(bullet, motherShip) {
     this.explodeParticles(motherShip.x, motherShip.y, 0xFF0000, 2500, 30);
@@ -615,7 +615,7 @@ Game.prototype.playerBulletHitsMotherShip = function(bullet, motherShip) {
     this.playerScore += 20;
     this.scoreText.text = this.scoreLabel + this.fixedIntSize(this.playerScore, 4);
     this.motherShipwaitKilledInThisLevel = true;
-}
+};
 
 Game.prototype.alienHitsPlayer = function(navePlayer, enemy) {
     console.log("Game Over");
@@ -625,7 +625,7 @@ Game.prototype.alienHitsPlayer = function(navePlayer, enemy) {
     this.isPlaying = false;
     this.loseLivesText = this.add.text(this.world.centerX, this.world.centerY, "", this.textGreenBoldStyle);
     this.loseLivesText.anchor.setTo(0.5);
-}
+};
 
 Game.prototype.bulletHitsShield = function(bullet, shield) {
     console.log("impacto en la defensa");
@@ -651,24 +651,24 @@ Game.prototype.bulletHitsShield = function(bullet, shield) {
         }
         // TODO: Add FX
     }
-}
+};
 
 Game.prototype.enemyBulletTouchGround = function(ground, enemyBullet) {
     enemyBullet.kill();
     this.enemyAttackTimer = 0;
-}
+};
 
 Game.prototype.alienHitsShield = function(bullet, shield) {
     shield.kill();
     this.explodeParticles (shield.x, shield.y, 0x00FF00, 2000, 50);
-}
+};
 
 Game.prototype.explodeParticles = function(x, y, color, lifespan, number) {
     this.alienDeadEmitter.x = x;
     this.alienDeadEmitter.y = y;
     this.alienDeadEmitter.forEach(function(particle){ if (!particle.visible) particle.tint = color;}); 
     this.alienDeadEmitter.start(true, lifespan, null, number);
-}
+};
 
 Game.prototype.PlayerLoseLives = function(){
     this.playerCurrentSpeed = 0;
@@ -677,7 +677,7 @@ Game.prototype.PlayerLoseLives = function(){
     this.loseLivesText = this.add.text(this.world.centerX, this.world.centerY, this.livesCount > 0 ? "Hit by an alien bullet!" : "- GAME OVER -", this.textGreenBoldStyle);
     this.loseLivesText.anchor.setTo(0.5);
     this.isPlaying = false;
-}
+};
 
 Game.prototype.GotoNextLevel = function() {
     this.isPauseBetweenLevels = true;
@@ -685,12 +685,12 @@ Game.prototype.GotoNextLevel = function() {
     this.enemyBullets.removeAll();
     this.pauseBetweenLevelsText = this.add.text(this.world.centerX, this.world.centerY, "", this.textGreenBoldStyle);
     this.pauseBetweenLevelsText.anchor.setTo(0.5);
-}
+};
 
 Game.prototype.fixedIntSize = function(num, size) {
     var s = "000000000" + num;
     return s.substr(s.length-size);
-}
+};
 
 /*
 Game.prototype.render = function() {

@@ -11,7 +11,7 @@ function Menu() {
     this.singleFilter;
     
     //this.myDataRef = new Firebase('https://boiling-torch-7482.firebaseio.com/');
-}
+};
 
 Menu.prototype.create = function () {
 
@@ -62,7 +62,7 @@ Menu.prototype.update = function () {
 };
 
 Menu.prototype.onHighscoresClick = function () {
-    this.game.state.start('highscores');
+    this.game.state.start('leaderboard');
 };
 
 Menu.prototype.onInputDown = function () {
@@ -75,5 +75,6 @@ Menu.prototype.onInputDown = function () {
 Menu.prototype.render = function() {
     
     this.game.debug.bodyInfo(this.btnHighscores);
-}
+};
+
 module.exports = Menu;
