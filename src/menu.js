@@ -4,6 +4,8 @@ function Menu() {
     this.menuFontStyle;
     this.timer;
     this.firebutton;
+    this.btnHighscores;
+    this.padding = 70;//{top: 30, right: 30, bottom: 30, left: 30};
     
     //FILTER STUFF 
     this.singleFilter;
@@ -20,9 +22,18 @@ Menu.prototype.create = function () {
     
     this.fireButton = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     this.startBg = this.add.sprite(0, 0, 'fondo');
+    
     //creamos el sprite del fondo y hacemos que se pueda clicar
     this.startBg.inputEnabled = true;		
     this.startBg.events.onInputDown.addOnce(this.onInputDown, this);
+    
+    //Botón de acceso directo a la pantalla de highscores
+    this.btnHighscores = this.add.sprite(this.world.width - this.padding, this.padding, 'podium');
+    this.btnHighscores.anchor.setTo(1, 0);
+    this.btnHighscores.inputEnabled = true;	
+    this.btnHighscores.events.onInputDown.addOnce(this.onHighscoresClick, this);
+    
+    this.add.tween(this.btnHighscores).to({y: 40}, 1000, Phaser.Easing.Linear.InOut, true, 0, Number.MAX_VALUE, true);
     
     //Add the CRT Filter
     
@@ -47,17 +58,22 @@ Menu.prototype.update = function () {
     
     
    //var f = this.stage.filters[this.FILTER_CRT]; 
-   //this.singleFilter.update();
-    
-    
+   //this.singleFilter.update();    
+};
+
+Menu.prototype.onHighscoresClick = function () {
+    this.game.state.start('highscores');
 };
 
 Menu.prototype.onInputDown = function () {
     if (!this.game.device.desktop) {
         this.scale.startFullScreen ();
     }
-    //this.game.state.start('game');
-  this.game.state.start('highscores');
+    this.game.state.start('game');
 };
 
+Menu.prototype.render = function() {
+    
+    this.game.debug.bodyInfo(this.btnHighscores);
+}
 module.exports = Menu;

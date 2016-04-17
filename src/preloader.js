@@ -43,6 +43,7 @@ Preloader.prototype.loadResources = function () {
     this.load.image('enemyBullet', 'assets/images/bomb.png');
     this.load.image('playerBullet', 'assets/images/bullet.png');
     this.load.image('pixel', 'assets/images/pixel.jpg');
+    this.load.image('podium', 'assets/images/podium.png');
     
     // SECUENCIAS
     this.load.spritesheet('alien1', 'assets/images/alien1.png', 40, 40, 2);

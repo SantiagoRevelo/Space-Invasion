@@ -69,7 +69,9 @@ function Game() {
     
     this.shields;
     this.shieldBmps;
-    this.shieldsDamageBmp;
+    
+    this.bdm;
+    this.HUDBorder;
     
     this.alienDeadEmitter;
     
@@ -135,8 +137,12 @@ Game.prototype.init = function() {
     
     this.shieldDamageBmp = this.make.bitmapData(28, 28);
     //this.shieldDamageBmp.circle(14,14,14, 'rgba(0, 0, 0, 255)');
-    this.shieldDamageBmp.rect(8, 10, 16, 20, 'rgba(0, 0, 0, 255)');
+    this.shieldDamageBmp.rect(8, 0, 20, 28, 'rgba(0, 0, 0, 255)');
     this.shieldDamageBmp.update();
+    
+    this.lineBMP = this.add.bitmapData(1280, 2);
+    this.lineBMP.rect(0, 0, 1280, 2, 'rgba(0, 255, 0, 255)');
+    this.lineBMP.update();
         
     this.alienDeadEmitter = this.add.emitter(0, 0, 100);
     this.alienDeadEmitter.makeParticles('pixel', 0, 250, 1, true);
@@ -172,17 +178,26 @@ Game.prototype.buildLevel = function() {
     
     //Escudos
     this.shields = this.add.group();
-    this.shields.enableBody = true;    
+    this.shields.enableBody = true;
         
     // HUD
-    //linea separación del HUD
+        
+    this.HUDBorder = this.add.sprite(0, this.world.height - this.HUDHeight, this.lineBMP);
+    this.physics.enable(this.HUDBorder, Phaser.Physics.ARCADE);
+    //this.HUDBorder.body.inmovable = true;
+    this.HUDBorder.body.allowGravity = 0;
+    this.HUDBorder.body.immovable = true;
+    
+    
+    
+    /*
     var line = this.add.graphics(0, this.world.height - this.HUDHeight);
     line.beginFill();
     line.lineStyle(1, 0x00ff00);
     line.lineTo(this.world.width, 0);
     line.endFill();
     window.graphics = line;
-    
+    */
     // Texto de numero de vidas
     this.livesText = this.add.text(this.worldOffsetH, this.world.height - ((this.HUDHeight * 0.5) + 20), 3,  this.textStyle);    
     
@@ -276,12 +291,15 @@ Game.prototype.createShields = function() {
     for (var i = 0; i < 3; i++ ) {        
         var baseBmp = this.make.bitmapData(80,70);
         baseBmp.draw('shield', 0, 0, 80, 70);
-        baseBmp.update();
-        
+        baseBmp.update();        
+                
         var shieldX = this.world.width * 0.25 * ( i + 1) - baseBmp.width * 0.5;
         var shieldY = this.world.height * 0.7;
         
         this.shields.create( shieldX, shieldY, baseBmp);
+
+        
+        
         
         this.shieldBmps.push({
             bmp: baseBmp,
@@ -289,6 +307,10 @@ Game.prototype.createShields = function() {
             worldY: shieldY
         });
     }
+            
+        this.shieldsenablebody = true;
+        this.shields.physicsBodyType = Phaser.Physics.ARCADE; 
+    this.shields.setAll('body.immovable', true);
 }
 
 Game.prototype.startLevel = function() {
@@ -499,6 +521,10 @@ Game.prototype.updateCollisions = function() {
     this.physics.arcade.overlap(this.playerBullets, this.shields, this.bulletHitsShield, null, this);
     this.physics.arcade.overlap(this.enemyBullets, this.shields, this.bulletHitsShield, null, this);
     this.physics.arcade.overlap(this.alienGroup, this.shields, this.alienHitsShield, null, this);
+    
+    this.physics.arcade.collide(this.enemyBullets, this.HUDBorder, this.enemyBulletTouchGround);
+    this.physics.arcade.collide(this.alienDeadEmitter, this.HUDBorder);
+   this.physics.arcade.collide(this.shields, this.alienDeadEmitter);
 }
 
 Game.prototype.movePlayer = function() {
@@ -625,6 +651,11 @@ Game.prototype.bulletHitsShield = function(bullet, shield) {
         }
         // TODO: Add FX
     }
+}
+
+Game.prototype.enemyBulletTouchGround = function(ground, enemyBullet) {
+    enemyBullet.kill();
+    this.enemyAttackTimer = 0;
 }
 
 Game.prototype.alienHitsShield = function(bullet, shield) {
