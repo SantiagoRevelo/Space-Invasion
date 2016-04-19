@@ -36,7 +36,7 @@ Leaderboard.prototype.create = function () {
     this.scoresTextStyle = { font: "28px 'Press Start 2P', cursive", fill: "#C2C2C2", align: "left" };
     
     
-    this.titleText = this.add.text(this.world.centerX, 20, "-LEADERBOARD-", this.titleTextStyle);
+    this.titleText = this.add.text(this.world.centerX, 40, "-LEADERBOARD-", this.titleTextStyle);
     this.titleText.anchor.add(0.5, 0);
     
     this.scoresText = this.add.text(0, 0, "", this.scoresTextStyle);
@@ -57,7 +57,7 @@ Leaderboard.prototype.create = function () {
     
     // posicionamos el texto en la pantalla.
     this.scoresText.x = (this.world.width - this.scoresText.width ) * 0.5;
-    this.scoresText.y = (this.world.height - this.scoresText.height ) * 0.5 + 20;
+    this.scoresText.y = (this.world.height - this.scoresText.height ) * 0.5 + 40;
     this.scoresText.text = "";
     
     // pulsando una tecla, retornamos al menu.

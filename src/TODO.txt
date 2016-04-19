@@ -1,6 +1,5 @@
 Mejoras pra cerrar versión 1.0:
-- pantalla highscores
-- Highscores online (firebase)
+- Pedir el nombre y guardar la puntuación online
 - final boss
 - pantalla de felicitacion
-- sonido
+- sonido ( juego y efecto tecleado del leaderboard)
