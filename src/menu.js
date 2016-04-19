@@ -1,16 +1,20 @@
 function Menu() {
 	this.startBg;
 	this.startPrompt;
+    
     this.menuFontStyle;
+    
     this.timer;
+    this.autoChangeStateDelay = 15000;
+    
     this.firebutton;
+    
     this.btnHighscores;
     this.padding = 70;//{top: 30, right: 30, bottom: 30, left: 30};
     
     //FILTER STUFF 
     this.singleFilter;
     
-    //this.myDataRef = new Firebase('https://boiling-torch-7482.firebaseio.com/');
 };
 
 Menu.prototype.create = function () {
@@ -45,6 +49,9 @@ Menu.prototype.create = function () {
     //Add the scanlines
     //scanlines = this.add.sprite(0,0,'scanlines');
     //scanlines.alpha = 0.3;
+    
+    // Returns to the main menu automatically after a pause at the end of the typed leaderboard
+    this.time.events.add(this.autoChangeStateDelay, this.onHighscoresClick, this);
 };
 
 Menu.prototype.update = function () {
