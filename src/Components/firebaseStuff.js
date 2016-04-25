@@ -17,8 +17,6 @@ FireBaseStuff.prototype.preload = function() {
     //console.log('Iniciadas las puntuaciones Online');
 };
 
-
-
 FireBaseStuff.prototype.updateValues = function(snapshot) {
         this.scoresListValues = snapshot.val();
         //console.log(snapshot.val());

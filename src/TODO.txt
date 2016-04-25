@@ -1,5 +1,4 @@
 Mejoras pra cerrar versión 1.0:
-- Pedir el nombre y guardar la puntuación online
 - final boss
 - pantalla de felicitacion
 - sonido ( juego y efecto tecleado del leaderboard)
