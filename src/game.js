@@ -120,7 +120,7 @@ Game.prototype.init = function() {
     
     this.playerCurrentSpeed = 0;
     this.playerAttackTime = 0;
-    this.livesCount = 3;
+    this.livesCount = 1;
     this.playerScore = 0000;
     this.scoreLabel = "Score: ";
         
@@ -396,11 +396,9 @@ Game.prototype.update = function () {
                 this.loseLivesText.text = "Hit by an alien bullet! \n ready in: " + ((this.loseLivesTimer - this.time.now)* 0.001).toFixed(1);
             }            
         }
-        if (this.livesCount <= 0) {
-            this.loseLivesText.text = "- Game Over - \n Touch anywhere to restart";
-            if (this.input.activePointer.isDown || this.fireButton.isDown) {
-                this.reStartGame();
-            }
+        //if (this.livesCount <= 0) {
+        else{
+          this.loseLivesText.text = "- Game Over - \n Touch anywhere to restart";
         }
     }
     
@@ -671,12 +669,21 @@ Game.prototype.explodeParticles = function(x, y, color, lifespan, number) {
 };
 
 Game.prototype.PlayerLoseLives = function(){
+    
     this.playerCurrentSpeed = 0;
     this.navePlayer.kill();
     this.loseLivesTimer = 3000 + this.time.now;
     this.loseLivesText = this.add.text(this.world.centerX, this.world.centerY, this.livesCount > 0 ? "Hit by an alien bullet!" : "- GAME OVER -", this.textGreenBoldStyle);
     this.loseLivesText.anchor.setTo(0.5);
     this.isPlaying = false;
+  
+    if (this.livesCount <= 0) {
+      //Esperamos 3 segundos y mostramos la ventana de pedir el nombre para la leaderboard...
+      this.time.events.add(3, this.promptPlayerName, this);
+      
+      //... y mientras dejamos el 
+      this.loseLivesText.text = "- Game Over - \n Touch anywhere to restart";
+    }
 };
 
 Game.prototype.GotoNextLevel = function() {
@@ -686,6 +693,36 @@ Game.prototype.GotoNextLevel = function() {
     this.pauseBetweenLevelsText = this.add.text(this.world.centerX, this.world.centerY, "", this.textGreenBoldStyle);
     this.pauseBetweenLevelsText.anchor.setTo(0.5);
 };
+
+Game.prototype.promptPlayerName = function() {
+  // Configuramos el contenido de la modal
+  $('#promptPlayerNameModal .modal-body').html('<h2>CONGRATULATIONS HEARTHLING</h2><h3>YOUR SCORE IS</h3><h1>' + this.playerScore + '</h1><p>TYPE YOUR NAME TO SIGN THE HALL OF FAME</p><input id="inputName" type="text" name="nickname" placeholder="Enter your name...">');          
+  
+  // Configuramos la funcionalidad de la modal
+  $('#sendScoreButton').click(this.submitScore.bind(this));
+  $("#inputName").keyup(this.validateName.bind(this));
+  $('#promptPlayerNameModal').on('hidden.bs.modal', this.OnCloseModalPromptPlayerName.bind(this));
+  
+  // Mostramos la modal
+  $('#promptPlayerNameModal').modal('show');
+  
+}; 
+
+Game.prototype.validateName = function(e) { 
+  if (e.keyCode == 13) {
+      this.submitScore();
+      $('#promptPlayerNameModal').modal('hide');
+  }
+}
+
+Game.prototype.submitScore = function() {
+    var v = $('#inputName').val();
+    fbs.addScore(v, this.playerScore);
+}
+
+Game.prototype.OnCloseModalPromptPlayerName = function() {
+  this.game.state.start('leaderboard');
+}
 
 Game.prototype.fixedIntSize = function(num, size) {
     var s = "000000000" + num;

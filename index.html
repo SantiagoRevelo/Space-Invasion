@@ -32,18 +32,41 @@
     <title>Space Invasion</title>
     
     <!-- build:css main.min.css -->
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/bootstrap.css">  
+    <link rel="stylesheet" href="css/main.css">    
     <!-- /build -->
     
     <!-- build:css firebase.min.css -->
     <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
-    <script src='src/firebaseStuff.js'></script>
+    <!--script src='src/firebaseStuff.js'></script-->
     <!-- /build -->
 </head>
 
 <body>
 
   <div id="SpaceInvader-game" class="game"></div>
+    
+  <!-- HTML NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP -->
+  <div class="modal fade " id="promptPlayerNameModal" tabindex="-1" role="dialog" aria-labelledby="promptPlayerNameModal-label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="promptPlayerNameModal-label">HIGHSCORER REGISTRATION</h4>
+        </div>
+        <div class="modal-body">
+          <h1>CONGRATULATIONS HEARTHLING</h1>
+          <p>TYPE YOUR NAME TO SIGN THE HALL OF FAME</p>          
+          <input id="inputName" type="text" name="nickname" placeholder="Enter your name...">
+        </div>
+        <div class="modal-footer">
+          <button id="sendScoreButton" type="button" class="btn btn-default" data-dismiss="modal">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END HTML NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP -->
+
 
   <!-- build:template
   <script type="text/javascript" src="cordova.js"></script>
@@ -60,6 +83,16 @@
   <!-- build:js bundle.min.js -->
   <script src="bundle.js"></script>
   <!-- /build -->
+  
+  <!-- PLUGINS NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP -->
+
+    <!-- Latest jQuery (1.11.1) -->
+    <script src="src/Components/jquery-1.12.3.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="src/Components/bootstrap.js"></script>
+
+  <!-- END PLUGINS NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP --> 
 
 </body>
 </html>

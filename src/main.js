@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'SpaceInvader-game');
+var game = new Phaser.Game(1280, 720, Phaser.WEBGL, 'SpaceInvasion-game');
 game.state.add('boot', require('./boot'));
 game.state.add('preloader', require('./preloader'));
 game.state.add('menu', require('./menu'));

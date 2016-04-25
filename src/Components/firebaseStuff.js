@@ -13,9 +13,8 @@ FireBaseStuff.prototype.preload = function() {
     // Attach an asynchronous callback to read the data at our posts reference
     this.ref.orderByChild('score').limitToLast(this.SCORES_SHOWED).on("value", this.updateValues.bind(this), function (errorObject) {
         console.log("Error de lectura de los datos de Firebase: " + errorObject.code);
-    });
-    
-    console.log('Iniciadas las puntuaciones Online');
+    });    
+    //console.log('Iniciadas las puntuaciones Online');
 };
 
 
@@ -26,7 +25,8 @@ FireBaseStuff.prototype.updateValues = function(snapshot) {
 }
 
 FireBaseStuff.prototype.addScore = function(theName, theScore) {        
-    this.scoreListRef.push({ name:theName, score:theScore });
+  //this.ref.push({'name':theName, 'score':theScore });
+  this.ref.child(theName + '-' + theScore).set({'name':theName, 'score':theScore });
 };
 
 FireBaseStuff.prototype.getLeaderBoard = function() {

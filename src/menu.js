@@ -10,15 +10,19 @@ function Menu() {
     this.firebutton;
     
     this.btnHighscores;
-    this.padding = 70;//{top: 30, right: 30, bottom: 30, left: 30};
+    this.padding = 70;
     
-    //FILTER STUFF 
+    // FILTER STUFF 
     this.singleFilter;
     
+    // STARFIELD
+    this.starfield;
 };
 
 Menu.prototype.create = function () {
-
+    
+    this.starfield = new Starfield(this);
+        
     this.menuFontStyle = { font: "bold 28px 'Press Start 2P', cursive", fill: "#ffffff", align: "center" };
     this.startPrompt = this.add.text(this.world.centerX, this.world.centerY + 120, "- Touch to Start -", this.menuFontStyle);
     this.startPrompt.anchor.setTo(0.5, 0.5);
@@ -39,8 +43,7 @@ Menu.prototype.create = function () {
     
     this.add.tween(this.btnHighscores).to({y: 40}, 1000, Phaser.Easing.Linear.InOut, true, 0, Number.MAX_VALUE, true);
     
-    //Add the CRT Filter
-    
+    //Add the CRT Filter    
     this.singleFilter = new Phaser.Filter(this, null, this.cache.getShader('crtFilter'));
     this.singleFilter.setResolution(this.world.width, this.world.height);
     this.stage.filters = [this.singleFilter];    
@@ -64,8 +67,8 @@ Menu.prototype.update = function () {
         this.onInputDown();
     
     
-   //var f = this.stage.filters[this.FILTER_CRT]; 
-   //this.singleFilter.update();    
+    //STRFIELD
+    this.starfield.update();
 };
 
 Menu.prototype.onHighscoresClick = function () {

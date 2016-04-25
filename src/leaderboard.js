@@ -17,6 +17,21 @@ function Leaderboard() {
     this.SCORES_SHOWED = 10;  
     
     //textUtils
+    this.content ;
+    this.line ;
+    this.wordIndex;
+    this.lineIndex;
+    this.wordDelay;
+    this.lineDelay;
+    
+    this.autoChangeStateDelay;
+    
+    // STARFIELD
+    this.starfield;
+};
+
+Leaderboard.prototype.create = function () {  
+    //init de variables
     this.content = [];
     this.line = [];
     this.wordIndex = 0;
@@ -25,12 +40,8 @@ function Leaderboard() {
     this.lineDelay = 100;
     
     this.autoChangeStateDelay = 10000;
-};
-
-Leaderboard.prototype.preload = function () {
-};
-
-Leaderboard.prototype.create = function () {
+  
+    this.starfield = new Starfield(this);
 
     this.titleTextStyle = { font: "42px 'Press Start 2P', cursive", fill: "#00FF00", align: "center" };
     this.scoresTextStyle = { font: "28px 'Press Start 2P', cursive", fill: "#C2C2C2", align: "left" };
@@ -134,8 +145,9 @@ Leaderboard.prototype.update = function () {
     
     if (this.fireButton.isDown)
         this.onInputDown();
-    
-   this.singleFilter.update();
+   
+    //STRFIELD
+    this.starfield.update();
 };
 
 Leaderboard.prototype.onInputDown = function () {

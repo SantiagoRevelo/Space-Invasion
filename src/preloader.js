@@ -31,12 +31,15 @@ Preloader.prototype.loadResources = function () {
     };
     //FONT
     this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
-
-    // ONLINE SCORES
-    fbs.preload();
     
+    //ONLINE SCORES
+    this.load.script('firebaseStuff', 'src/components/firebaseStuff.js');    
+    
+    //Starfield
+    this.load.script('starfield', 'src/components/starfield.js');
+
     //OVERLAYS
-    this.load.image('scanlines','assets/images/scanlines.png');
+    //this.load.image('scanlines','assets/images/scanlines.png');
     
     // IMAGES
     this.load.image('fondo',  'assets/images/titleBg.png');
@@ -48,6 +51,8 @@ Preloader.prototype.loadResources = function () {
     this.load.image('pixel', 'assets/images/pixel.jpg');
     this.load.image('podium', 'assets/images/podium.png');
     
+    this.load.image('star', 'assets/images/star.png');
+    
     // SECUENCIAS
     this.load.spritesheet('alien1', 'assets/images/alien1.png', 40, 40, 2);
     this.load.spritesheet('alien2', 'assets/images/alien2.png', 40, 40, 2);
@@ -57,6 +62,11 @@ Preloader.prototype.loadResources = function () {
     this.load.shader('crtFilter', 'src/filters/crt.frag');
 };
 
+Preloader.prototype.scriptLoaded = function (data) {
+    console.log(data);
+}
+
+
 Preloader.prototype.create = function () {
     //this.asset.cropEnabled = false;
 };
@@ -64,11 +74,13 @@ Preloader.prototype.create = function () {
 Preloader.prototype.update = function () {
   if (!!this.ready && this.isFontsLoaded) {
       this.game.state.start('menu');
-     // this.game.state.start('game');
+      //this.game.state.start('game');
   }
 };
 
 Preloader.prototype.onLoadComplete = function () {
+   // ONLINE SCORES
+   fbs.preload();
    this.ready = true;
 };
 
