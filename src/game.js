@@ -120,7 +120,7 @@ Game.prototype.init = function() {
     
     this.playerCurrentSpeed = 0;
     this.playerAttackTime = 0;
-    this.livesCount = 1;
+    this.livesCount = 3;
     this.playerScore = 0000;
     this.scoreLabel = "Score: ";
         
