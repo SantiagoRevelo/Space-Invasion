@@ -1,9 +1,17 @@
 body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
+    margin:0px;
+    padding:0px;
     background-color: #000;
+}
+#turn {
+    width:100%;
+    height:100%;
+    position:fixed;
+    top:0px;
+    left:0px;
+    background:url('/assets/images/wrongOrientation.png') no-repeat center center fixed #000000;
+    //background-size: cover;
+    display:none;
 }
 canvas {
     display: block;

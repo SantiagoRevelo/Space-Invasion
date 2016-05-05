@@ -1,41 +1,42 @@
 <!doctype html>
 <html>
+
 <head>
-    <meta charset="utf-8">        
+    <meta charset="utf-8">
     <meta name="author" content="Santiago Revelo">
     <meta name="description" content="Space Invader Clone - by: sreveloc - Developed with Phaser v2.4.6">
-    
+
     <!-- Mobile Stuff -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="msapplication-tap-highlight" content="no">
-    
+
     <!-- Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Space Invasion">
     <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon.png">
-    
+
     <!-- Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="SPACE INVASION">
     <link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png">
-    
+
     <!-- Windows 8 -->
     <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon.png">
-    <meta name="msapplication-TileColor" content="#FFFFFF">    
-    
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+
     <meta name="theme-color" content="#000000">
-    
+
     <link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
-    
+
     <title>Space Invasion</title>
-    
+
     <!-- build:css main.min.css -->
-    <link rel="stylesheet" href="css/bootstrap.css">  
-    <link rel="stylesheet" href="css/main.css">    
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
     <!-- /build -->
-    
+
     <!-- build:css firebase.min.css -->
     <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
     <!--script src='src/firebaseStuff.js'></script-->
@@ -43,50 +44,53 @@
 </head>
 
 <body>
-
-  <div id="SpaceInvader-game" class="game"></div>
+    <!-- THE WORNG ORIENTATION WARNING -->
+    <div id="turn"></div>
     
-  <!-- HTML NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP -->
-  <div class="modal fade " id="promptPlayerNameModal" tabindex="-1" role="dialog" aria-labelledby="promptPlayerNameModal-label" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-          <h4 class="modal-title" id="promptPlayerNameModal-label">HIGHSCORE REGISTRATION</h4>
+    <!-- THE GAME CANVAS -->
+    <div id="SpaceInvader-game" class="game"></div>
+
+    <!-- HTML NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP -->
+    <div class="modal fade " id="promptPlayerNameModal" tabindex="-1" role="dialog" aria-labelledby="promptPlayerNameModal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="promptPlayerNameModal-label">HIGHSCORE REGISTRATION</h4>
+                </div>
+                <div class="modal-body">
+                    <h1>CONGRATULATIONS HEARTHLING</h1>
+                    <p>TYPE YOUR NAME TO SIGN IN THE HALL OF FAME</p>
+                    <input id="inputName" type="text" name="nickname" placeholder="Enter your name...">
+                </div>
+                <div class="modal-footer">
+                    <button id="sendScoreButton" type="button" class="btn btn-default" data-dismiss="modal">SAVE</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <h1>CONGRATULATIONS HEARTHLING</h1>
-          <p>TYPE YOUR NAME TO SIGN IN THE HALL OF FAME</p>          
-          <input id="inputName" type="text" name="nickname" placeholder="Enter your name...">
-        </div>
-        <div class="modal-footer">
-          <button id="sendScoreButton" type="button" class="btn btn-default" data-dismiss="modal">SAVE</button>
-        </div>
-      </div>
     </div>
-  </div>
-  <!-- END HTML NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP -->
+    <!-- END HTML NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP -->
 
 
-  <!-- build:template
+    <!-- build:template
   <script type="text/javascript" src="cordova.js"></script>
   /build -->
-  
-  <!-- build:remove -->
-  <script src="http://localhost:35729/livereload.js"></script>
-  <!-- /build -->
 
-  <!-- build:js phaser.min.js -->
-  <script src="node_modules/phaser/build/phaser.min.js"></script>
-  <!-- /build -->
+    <!-- build:remove -->
+    <script src="http://localhost:35729/livereload.js"></script>
+    <!-- /build -->
 
-  <!-- build:js bundle.min.js -->
-  <script src="bundle.js"></script>
-  <script src="src/plugins/jquery-1.12.3.min.js"></script>
-  <script src="src/plugins/bootstrap.js"></script>
-  <!-- /build -->
-  
-  <!-- PLUGINS NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP -->
+    <!-- build:js phaser.min.js -->
+    <script src="node_modules/phaser/build/phaser.min.js"></script>
+    <!-- /build -->
+
+    <!-- build:js bundle.min.js -->
+    <script src="bundle.js"></script>
+    <script src="src/plugins/jquery-1.12.3.min.js"></script>
+    <script src="src/plugins/bootstrap.js"></script>
+    <!-- /build -->
+
+    <!-- PLUGINS NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP -->
 
     <!-- Latest jQuery (1.11.1) -->
     <!--script src="src/plugins/jquery-1.12.3.min.js"></script-->
@@ -94,8 +98,8 @@
     <!-- Latest compiled and minified JavaScript -->
     <!-- script src="src/plugins/bootstrap.js"></script-->
 
-  <!-- END PLUGINS NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP --> 
+    <!-- END PLUGINS NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP -->
 
 </body>
-</html>
 
+</html>
