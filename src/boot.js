@@ -39,6 +39,7 @@ Boot.prototype.gameResized = function (width, height) {
 */
 Boot.prototype.handleIncorrect = function () {
     if(!this.game.device.desktop){
+        this.game.paused=true;
         document.getElementById("turn").style.display="block";
     }
 };
@@ -51,6 +52,7 @@ Boot.prototype.handleCorrect = function () {
             this.width = 360;
             this.renderer.resize(this.width, this.height);
         }
+        this.game.paused=false;
         document.getElementById("turn").style.display="none";
     }
 };
