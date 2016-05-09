@@ -45,6 +45,7 @@ function Game() {
     this.playerCurrentDirection;
     this.playerBullet;
     this.playerAttackTime;
+    this.soundShoot;
     
     this.lives;
     this.livesCount;
@@ -61,6 +62,7 @@ function Game() {
     this.livingEnemies;
     this.enemyBullets;
     this.enemyAttackTimer;
+    this.soundBomb;
     
     this.motherShip;
     this.motherShipSpeed;
@@ -74,6 +76,7 @@ function Game() {
     this.HUDBorder;
     
     this.alienDeadEmitter;
+    this.soundExplode;
     
     this.level;
     this.myTimer;
@@ -123,6 +126,7 @@ Game.prototype.init = function() {
     this.livesCount = 3;
     this.playerScore = 0000;
     this.scoreLabel = "Score: ";
+    this.soundShoot = this.add.sound('shoot');
         
     this.level = 1 ;
     this.myTimer = 0;
@@ -134,6 +138,7 @@ Game.prototype.init = function() {
     this.enemySpeed = 25;
     this.livingEnemies = [];
     this.enemyAttackTimer = this.rnd.integerInRange(0, 5) * 1000 / this.level;
+    this.soundBomb = this.add.sound('bomb');
     
     this.shieldDamageBmp = this.make.bitmapData(28, 28);
     //this.shieldDamageBmp.circle(14,14,14, 'rgba(0, 0, 0, 255)');
@@ -149,6 +154,7 @@ Game.prototype.init = function() {
     this.alienDeadEmitter.collide = true;
     this.alienDeadEmitter.enableBody = true;
     this.alienDeadEmitter.gravity = 200;
+    this.soundExplode = this.add.sound('explode');
     
     this.worldOffsetH = 40;
     this.worldOffsetV = 20;
@@ -297,9 +303,6 @@ Game.prototype.createShields = function() {
         var shieldY = this.world.height * 0.7;
         
         this.shields.create( shieldX, shieldY, baseBmp);
-
-        
-        
         
         this.shieldBmps.push({
             bmp: baseBmp,
@@ -308,8 +311,8 @@ Game.prototype.createShields = function() {
         });
     }
             
-        this.shieldsenablebody = true;
-        this.shields.physicsBodyType = Phaser.Physics.ARCADE; 
+    this.shieldsenablebody = true;
+    this.shields.physicsBodyType = Phaser.Physics.ARCADE; 
     this.shields.setAll('body.immovable', true);
 };
 
@@ -522,7 +525,7 @@ Game.prototype.updateCollisions = function() {
     
     this.physics.arcade.collide(this.enemyBullets, this.HUDBorder, this.enemyBulletTouchGround);
     this.physics.arcade.collide(this.alienDeadEmitter, this.HUDBorder);
-   this.physics.arcade.collide(this.shields, this.alienDeadEmitter);
+    this.physics.arcade.collide(this.shields, this.alienDeadEmitter);
 };
 
 Game.prototype.movePlayer = function() {
@@ -542,6 +545,8 @@ Game.prototype.fireBullet = function() {
             bullet.body.velocity.y -= 400;
             //Un disparo cada dos segundos
             this.playerAttackTime = this.time.now + 2000;
+            
+            this.soundShoot.play();
         }
     }
 };
@@ -570,7 +575,9 @@ Game.prototype.enemyFires = function( nextX ) {
         }
         
         this.enemyAttackTimer = this.time.now + this.rnd.integerInRange(0, 4) * 1000 / this.level;
+        this.soundBomb.play();
     }
+    
 };
 
 Game.prototype.playerBulletHitsEnemy = function(bullet, enemy) {
@@ -623,11 +630,11 @@ Game.prototype.alienHitsPlayer = function(navePlayer, enemy) {
     this.isPlaying = false;
     this.loseLivesText = this.add.text(this.world.centerX, this.world.centerY, "", this.textGreenBoldStyle);
     this.loseLivesText.anchor.setTo(0.5);
+    
 };
 
 Game.prototype.bulletHitsShield = function(bullet, shield) {
-    console.log("impacto en la defensa");
-    var shieldIdx = this.shields.getChildIndex(shield); 
+    var shieldIdx = this.shields.getChildIndex(shield);
 
     var matchingBmp = this.shieldBmps[shieldIdx];
     
@@ -666,6 +673,7 @@ Game.prototype.explodeParticles = function(x, y, color, lifespan, number) {
     this.alienDeadEmitter.y = y;
     this.alienDeadEmitter.forEach(function(particle){ if (!particle.visible) particle.tint = color;}); 
     this.alienDeadEmitter.start(true, lifespan, null, number);
+    this.soundExplode.play();
 };
 
 Game.prototype.PlayerLoseLives = function(){
