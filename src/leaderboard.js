@@ -9,7 +9,7 @@ function Leaderboard() {
     this.firebutton;
     
     //FILTER STUFF 
-    this.singleFilter;
+    this.crtFilter;
     
     //ONLINE DATA
     this.scoreListRef;
@@ -76,9 +76,9 @@ Leaderboard.prototype.create = function () {
     this.input.onDown.add(this.onInputDown, this);
     
     //Add the CRT Filter
-    this.singleFilter = new Phaser.Filter(this, null, this.cache.getShader('crtFilter'));
-    this.singleFilter.setResolution(this.world.width, this.world.height);
-    this.stage.filters = [this.singleFilter];
+    this.crtFilter = new Phaser.Filter(this, null, this.cache.getShader('crtFilter'));
+    this.crtFilter.setResolution(this.world.width, this.world.height);
+    this.stage.filters = [this.crtFilter];
     
     this.nextLine();
 };
@@ -148,6 +148,8 @@ Leaderboard.prototype.update = function () {
    
     //STRFIELD
     this.starfield.update();
+    //FILTERS
+    this.crtFilter.update();
 };
 
 Leaderboard.prototype.onInputDown = function () {

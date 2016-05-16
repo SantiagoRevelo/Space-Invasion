@@ -13,7 +13,7 @@ function Menu() {
     this.padding = 70;
     
     // FILTER STUFF 
-    this.singleFilter;
+    this.crtFilter;
     
     // STARFIELD
     this.starfield;
@@ -44,9 +44,9 @@ Menu.prototype.create = function () {
     this.add.tween(this.btnHighscores).to({y: 40}, 1000, Phaser.Easing.Linear.InOut, true, 0, Number.MAX_VALUE, true);
     
     //Add the CRT Filter    
-    this.singleFilter = new Phaser.Filter(this, null, this.cache.getShader('crtFilter'));
-    this.singleFilter.setResolution(this.world.width, this.world.height);
-    this.stage.filters = [this.singleFilter];    
+    this.crtFilter = new Phaser.Filter(this, null, this.cache.getShader('crtFilter'));
+    this.crtFilter.setResolution(this.world.width, this.world.height);
+    this.stage.filters = [this.crtFilter];    
     
     
     //Add the scanlines
@@ -69,6 +69,9 @@ Menu.prototype.update = function () {
     
     //STRFIELD
     this.starfield.update();
+    
+    //FILTERS
+    this.crtFilter.update();
 };
 
 Menu.prototype.onHighscoresClick = function () {

@@ -96,7 +96,7 @@ function Game() {
     this.loseLivesText;
     this.pauseBetweenLevelsText;
     
-    this.singleFilter;
+    this.crtFilter;
     this.scanlines;
 };
 
@@ -112,9 +112,9 @@ Game.prototype.create = function () {
 Game.prototype.initializeFilters = function() {
 
     //Add the CRT Filter
-    this.singleFilter = new Phaser.Filter(this, null, this.cache.getShader('crtFilter'));
-    this.singleFilter.setResolution(this.world.width, this.world.height);
-    this.stage.filters = [this.singleFilter];   
+    this.crtFilter = new Phaser.Filter(this, null, this.cache.getShader('crtFilter'));
+    this.crtFilter.setResolution(this.world.width, this.world.height);
+    this.stage.filters = [this.crtFilter];   
 };
 
 Game.prototype.init = function() {
@@ -170,7 +170,8 @@ Game.prototype.init = function() {
 };
 
 Game.prototype.buildLevel = function() {
-    this.physics.startSystem(Phaser.Physics.ARCADE);
+   // this.physics.startSystem(Phaser.Physics.ARCADE);
+    //this.physics.startSystem(Phaser.Physics.P2JS);
     
     // Creamos el player
     this.createNavePlayer();
@@ -418,7 +419,7 @@ Game.prototype.update = function () {
     }
     
     //FILTERS
-    //this.singleFilter.update();
+    this.crtFilter.update();
 };
 
 Game.prototype.updateEnemies = function() {
@@ -525,7 +526,7 @@ Game.prototype.updateCollisions = function() {
     
     this.physics.arcade.collide(this.enemyBullets, this.HUDBorder, this.enemyBulletTouchGround);
     this.physics.arcade.collide(this.alienDeadEmitter, this.HUDBorder);
-    this.physics.arcade.collide(this.shields, this.alienDeadEmitter);
+    this.physics.arcade.collide(this.alienDeadEmitter, this.shields);
 };
 
 Game.prototype.movePlayer = function() {
@@ -654,7 +655,6 @@ Game.prototype.bulletHitsShield = function(bullet, shield) {
         if (bullet.key === "playerBullet") {
             this.playerAttackTime = 0;
         }
-        // TODO: Add FX
     }
 };
 
