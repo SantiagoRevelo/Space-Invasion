@@ -85,11 +85,10 @@ Preloader.prototype.loadResources = function () {
         google: { families: [ 'Press+Start+2P::latin' ] }
 
     };
-    //FONT
+    // Scripts
     this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
-    
-    //ONLINE SCORES
-    this.load.script('firebaseStuff', 'src/components/firebaseStuff.js');    
+    this.load.script('firebaseStuff', 'src/components/firebaseStuff.js');
+    this.load.script('cameraShek', 'src/plugins/CameraShake.js')
     
     //Starfield
     this.load.script('starfield', 'src/components/starfield.js');
@@ -105,8 +104,7 @@ Preloader.prototype.loadResources = function () {
     this.load.image('enemyBullet', 'assets/images/bomb.png');
     this.load.image('playerBullet', 'assets/images/bullet.png');
     this.load.image('pixel', 'assets/images/pixel.jpg');
-    this.load.image('podium', 'assets/images/podium.png');
-    
+    this.load.image('podium', 'assets/images/podium.png');    
     this.load.image('star', 'assets/images/star.png');
     
     // SECUENCIAS

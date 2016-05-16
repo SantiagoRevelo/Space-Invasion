@@ -40,11 +40,14 @@ function Game() {
     this.navePlayer;
     this.cursors;
     this.fireButton;
+    this.scapeButton;
     
     this.playerCurrentSpeed;
     this.playerCurrentDirection;
     this.playerBullet;
     this.playerAttackTime;
+    this.playerDieCameraShakingSettings;
+    
     this.soundShoot;
     
     this.lives;
@@ -103,23 +106,40 @@ function Game() {
 Game.prototype.create = function () {
     this.init();
     
-    this.initializeFilters();
+    this.initializePlugins();
     
     this.buildLevel();
     this.startLevel();
 };
 
-Game.prototype.initializeFilters = function() {
+Game.prototype.initializePlugins = function() {
 
     //Add the CRT Filter
     this.crtFilter = new Phaser.Filter(this, null, this.cache.getShader('crtFilter'));
     this.crtFilter.setResolution(this.world.width, this.world.height);
     this.stage.filters = [this.crtFilter];   
+    
+        
+    // SHAKE PLUGIN
+    this.game.plugins.cameraShake = this.game.plugins.add(Phaser.Plugin.CameraShake);    
+    
+    //change default properties
+    this.playerDieCameraShakingSettings = {
+        shakeRange: 30,
+        shakeCount: 5,
+        shakeInterval: 0, 
+        randomShake: false,
+        randomizeInterval: true,
+        shakeAxis: 'xy',
+        initialCameraPos: this.camera.position
+    };
 };
 
 Game.prototype.init = function() {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.fireButton = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.scapeButton = this.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    this.scapeButton.onUp.add( function(){ this.game.state.start('menu'); }, this);
     
     this.playerCurrentSpeed = 0;
     this.playerAttackTime = 0;
@@ -170,7 +190,7 @@ Game.prototype.init = function() {
 };
 
 Game.prototype.buildLevel = function() {
-   // this.physics.startSystem(Phaser.Physics.ARCADE);
+    this.physics.startSystem(Phaser.Physics.ARCADE);
     //this.physics.startSystem(Phaser.Physics.P2JS);
     
     // Creamos el player
@@ -195,16 +215,6 @@ Game.prototype.buildLevel = function() {
     this.HUDBorder.body.allowGravity = 0;
     this.HUDBorder.body.immovable = true;
     
-    
-    
-    /*
-    var line = this.add.graphics(0, this.world.height - this.HUDHeight);
-    line.beginFill();
-    line.lineStyle(1, 0x00ff00);
-    line.lineTo(this.world.width, 0);
-    line.endFill();
-    window.graphics = line;
-    */
     // Texto de numero de vidas
     this.livesText = this.add.text(this.worldOffsetH, this.world.height - ((this.HUDHeight * 0.5) + 20), 3,  this.textStyle);    
     
@@ -357,9 +367,6 @@ Game.prototype.startLevel = function() {
         nave.tint = 0x00FF00;
     }
     this.livesText.text = this.livesCount;
-    //SCANLINES
-    //this.scanlines = this.add.sprite(0,0,'scanlines');
-    //this.scanlines.alpha = 0.3;
 };
 
 Game.prototype.reStartGame = function() {
@@ -512,7 +519,6 @@ Game.prototype.checkInput = function() {
     if (this.fireButton.isDown) {
         this.fireBullet();
     }
-    
 };
 
 Game.prototype.updateCollisions = function() {
@@ -609,6 +615,8 @@ Game.prototype.enemyBulletHitsPlayer = function(player, enemyBullet) {
     }
     this.livesText.text = this.lives.countLiving();
     this.livesCount--;
+    this.game.plugins.cameraShake.setup (this.playerDieCameraShakingSettings);
+    this.game.plugins.cameraShake.shake();
     this.PlayerLoseLives();
 };
 

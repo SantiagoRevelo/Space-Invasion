@@ -28,7 +28,8 @@ Menu.prototype.create = function () {
     this.startPrompt.anchor.setTo(0.5, 0.5);
     this.timer = 0;
     
-    this.fireButton = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.fireButton = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);    
+    
     this.startBg = this.add.sprite(0, 0, 'fondo');
     
     //creamos el sprite del fondo y hacemos que se pueda clicar
@@ -46,12 +47,7 @@ Menu.prototype.create = function () {
     //Add the CRT Filter    
     this.crtFilter = new Phaser.Filter(this, null, this.cache.getShader('crtFilter'));
     this.crtFilter.setResolution(this.world.width, this.world.height);
-    this.stage.filters = [this.crtFilter];    
-    
-    
-    //Add the scanlines
-    //scanlines = this.add.sprite(0,0,'scanlines');
-    //scanlines.alpha = 0.3;
+    this.stage.filters = [this.crtFilter];
     
     // Returns to the main menu automatically after a pause at the end of the typed leaderboard
     this.time.events.add(this.autoChangeStateDelay, this.onHighscoresClick, this);
@@ -65,7 +61,6 @@ Menu.prototype.update = function () {
     }
     if (this.fireButton.isDown)
         this.onInputDown();
-    
     
     //STRFIELD
     this.starfield.update();
