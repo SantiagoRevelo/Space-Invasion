@@ -9,7 +9,7 @@ body {
     position:fixed;
     top:0px;
     left:0px;
-    background:url('/assets/images/wrongOrientation.png') no-repeat center center fixed #000000;
+    background:url(../assets/images/wrongOrientation.png) no-repeat center center fixed #000000;
     //background-size: cover;
     display:none;
 }

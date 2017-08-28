@@ -225,7 +225,7 @@ Game.prototype.buildLevel = function() {
     }
     this.livesText.text = this.lives.countLiving();
     
-    var textoCreditos = this.add.text(0, this.world.height - ((this.HUDHeight * 0.5) + 20), 'Space Invasion - By Sreveloc',  this.textBoldStyle);
+    var textoCreditos = this.add.text(0, this.world.height - ((this.HUDHeight * 0.5) + 20), 'Space Invasion - By SantiagoRevelo',  this.textBoldStyle);
     textoCreditos.x = this.world.width - this.worldOffsetH - textoCreditos.width;
         
     // Puntuaciones

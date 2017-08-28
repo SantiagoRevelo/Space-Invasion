@@ -86,7 +86,7 @@ Preloader.prototype.loadResources = function () {
 
     };
     // Scripts
-    this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+    this.load.script('webfont', 'src/plugins/webfont.js');
     this.load.script('firebaseStuff', 'src/components/firebaseStuff.js');
     this.load.script('cameraShek', 'src/plugins/CameraShake.js')
     

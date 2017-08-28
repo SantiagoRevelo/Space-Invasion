@@ -11,5 +11,8 @@ Se necesita NodeJs instalado:
 - npm start -> para activar el server
 - npm run build -> para deploy
 
+(por un error, cuando el css cuando especificas una ruta relativa escapando un nivel "../", 
+ en la compilación lo pone así "../../" y eso no es correcto. hay que cambiarlo a mano)
+
 
 By: Santiago Revelo

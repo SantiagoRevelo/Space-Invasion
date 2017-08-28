@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="author" content="Santiago Revelo">
-    <meta name="description" content="Space Invader Clone - by: sreveloc - Developed with Phaser v2.4.6">
+    <meta name="description" content="Space Invader Clone - by: santiagorevelo - Developed with Phaser v2.4.6">
 
     <!-- Mobile Stuff -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -28,18 +28,15 @@
 
     <meta name="theme-color" content="#000000">
 
-    <link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
+    <!--link rel='shortcut icon' type='image/x-icon' href='favicon.ico' /-->
 
     <title>Space Invasion</title>
 
-    <!-- build:css main.min.css -->
-    <link rel="stylesheet" href="css/bootstrap.css">
+    <!-- build:css css/main.min.css -->
     <link rel="stylesheet" href="css/main.css">
     <!-- /build -->
-
-    <!-- build:css firebase.min.css -->
-    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
-    <!--script src='src/firebaseStuff.js'></script-->
+    <!-- build:css css/bootstrap.min.css -->
+    <link rel="stylesheet" href="css/bootstrap.css">
     <!-- /build -->
 </head>
 
@@ -51,7 +48,7 @@
     <div id="SpaceInvader-game" class="game"></div>
 
     <!-- HTML NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP -->
-    <div class="modal fade " id="promptPlayerNameModal" tabindex="-1" role="dialog" aria-labelledby="promptPlayerNameModal-label" aria-hidden="true">
+    <div class="modal fade" id="promptPlayerNameModal" tabindex="-1" role="dialog" aria-labelledby="promptPlayerNameModal-label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -71,34 +68,22 @@
     </div>
     <!-- END HTML NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP -->
 
-
-    <!-- build:template
-  <script type="text/javascript" src="cordova.js"></script>
-  /build -->
-
     <!-- build:remove -->
     <script src="http://localhost:35729/livereload.js"></script>
     <!-- /build -->
 
-    <!-- build:js phaser.min.js -->
+    <!-- build:js src/phaser.min.js -->
     <script src="node_modules/phaser/build/phaser.min.js"></script>
     <!-- /build -->
 
-    <!-- build:js bundle.min.js -->
+    <!-- build:js src/bundle.min.js -->
     <script src="bundle.js"></script>
+    <!-- /build -->
+    
     <script src="src/plugins/jquery-1.12.3.min.js"></script>
     <script src="src/plugins/bootstrap.js"></script>
-    <!-- /build -->
-
-    <!-- PLUGINS NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP -->
-
-    <!-- Latest jQuery (1.11.1) -->
-    <!--script src="src/plugins/jquery-1.12.3.min.js"></script-->
-
-    <!-- Latest compiled and minified JavaScript -->
-    <!-- script src="src/plugins/bootstrap.js"></script-->
-
-    <!-- END PLUGINS NEEDED FOR THE IMPORTANT MESSAGE MODAL POPUP -->
+    <script src="src/plugins/firebase.js"></script>
+    <script src="src/components/firebaseStuff.js"></script>
 
 </body>
 
