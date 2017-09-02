@@ -1,7 +1,7 @@
 body {
     margin:0px;
     padding:0px;
-    background-color: #000;
+    background-color: #FFF;
 }
 #turn {
     width:100%;
@@ -9,8 +9,7 @@ body {
     position:fixed;
     top:0px;
     left:0px;
-    background:url(../assets/images/wrongOrientation.png) no-repeat center center fixed #000000;
-    //background-size: cover;
+    background:url(../assets/images/wrongorientation.png) no-repeat center center fixed #000000;
     display:none;
 }
 canvas {
@@ -35,7 +34,7 @@ canvas {
 .modal-content {
     background-color: #000;
     color: #FFF;
-    /*font-family: "Press Start 2P";*/
+    font-family: "Press Start 2P";
     font-size: 10pt;
 }
 .modal-header {

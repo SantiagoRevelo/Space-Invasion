@@ -100,7 +100,7 @@ Preloader.prototype.loadResources = function () {
     this.load.image('fondo',  'assets/images/titleBg.png');
     this.load.image('navePlayer', 'assets/images/ship.png');
     this.load.image('shield', 'assets/images/shield.png');
-    this.load.image('motherShip', 'assets/images/motherShip.png');
+    this.load.image('motherShip', 'assets/images/mothership.png');
     this.load.image('enemyBullet', 'assets/images/bomb.png');
     this.load.image('playerBullet', 'assets/images/bullet.png');
     this.load.image('pixel', 'assets/images/pixel.jpg');
